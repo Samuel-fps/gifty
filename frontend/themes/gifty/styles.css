@@ -1,0 +1,10 @@
+@import url('./main-layout.css');
+@import url('./views/data-grid-view.css');
+@import url('./views/image-gallery-view.css');    html {
+      --lumo-primary-color: rgb(193, 154, 107);
+      --lumo-primary-color-50pct: rgba(193, 154, 107, 0.5);
+      --lumo-primary-color-10pct: rgba(193, 154, 107, 0.1);
+      --lumo-body-text-color: rgb(57, 39, 20);
+      --lumo-primary-text-color: rgb(193, 154, 107);
+
+    }
