@@ -1,5 +1,7 @@
 package com.gifty.application.views.login;
 
+import com.vaadin.flow.component.button.Button;
+import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.html.H1;
 import com.vaadin.flow.component.login.LoginForm;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
@@ -24,7 +26,11 @@ public class LoginView extends VerticalLayout implements BeforeEnterObserver {
 
         login.setAction("login");
 
-        add(new H1("Gifty"), login);
+        Button signinButton = new Button("Sign in");
+        signinButton.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
+        signinButton.addClickListener(e -> getUI().ifPresent(ui -> ui.navigate(RegistrationView.class)));
+
+        add(new H1("Gifty"), login, signinButton);
     }
 
     @Override
