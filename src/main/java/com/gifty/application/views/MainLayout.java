@@ -1,12 +1,14 @@
 package com.gifty.application.views;
 
-
+import com.gifty.application.security.SecurityService;
 import com.gifty.application.views.datagrid.DataGridView;
 import com.gifty.application.views.helloworld.HelloWorldView;
 import com.gifty.application.views.imagegallery.ImageGalleryView;
 import com.gifty.application.views.personform.PersonFormView;
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.applayout.AppLayout;
+import com.vaadin.flow.component.button.Button;
+import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.html.H1;
 import com.vaadin.flow.component.html.Header;
@@ -32,14 +34,10 @@ import com.vaadin.flow.theme.lumo.LumoUtility.Whitespace;
 import com.vaadin.flow.theme.lumo.LumoUtility.Width;
 import org.vaadin.lineawesome.LineAwesomeIcon;
 
-/**
- * The main view is a top-level placeholder for other views.
- */
 public class MainLayout extends AppLayout {
 
-    /**
-     * A simple navigation item component, based on ListItem element.
-     */
+    private final SecurityService securityService;
+
     public static class MenuItemInfo extends ListItem {
 
         private final Class<? extends Component> view;
@@ -69,7 +67,8 @@ public class MainLayout extends AppLayout {
 
     }
 
-    public MainLayout() {
+    public MainLayout(SecurityService securityService) {
+        this.securityService = securityService;
         addToNavbar(createHeaderContent());
     }
 
@@ -80,9 +79,13 @@ public class MainLayout extends AppLayout {
         Div layout = new Div();
         layout.addClassNames(Display.FLEX, AlignItems.CENTER, Padding.Horizontal.LARGE);
 
-        H1 appName = new H1("gifty");
+        H1 appName = new H1("Gifty");
         appName.addClassNames(Margin.Vertical.MEDIUM, Margin.End.AUTO, FontSize.LARGE);
         layout.add(appName);
+
+        String u = securityService.getAuthenticatedUser().getUsername();
+        Button logout = new Button("Log out " + u, e -> securityService.logout());
+        layout.add(logout);
 
         Nav nav = new Nav();
         nav.addClassNames(Display.FLEX, Overflow.AUTO, Padding.Horizontal.MEDIUM, Padding.Vertical.XSMALL);
