@@ -1,4 +1,4 @@
-package com.gifty.application.views.login;
+package com.gifty.application.login;
 
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.router.PageTitle;

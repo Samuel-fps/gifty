@@ -1,4 +1,4 @@
-package com.gifty.application.views.login;
+package com.gifty.application.login;
 
 import com.vaadin.flow.component.HasValueAndElement;
 import com.vaadin.flow.component.button.Button;
