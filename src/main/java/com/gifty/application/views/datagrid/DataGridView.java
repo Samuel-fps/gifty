@@ -27,10 +27,13 @@ import java.time.format.DateTimeFormatter;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
+
+import jakarta.annotation.security.PermitAll;
 import org.apache.commons.lang3.StringUtils;
 
 @PageTitle("Data Grid")
 @Route(value = "data-grid", layout = MainLayout.class)
+@PermitAll
 public class DataGridView extends Div {
 
     private GridPro<Client> grid;

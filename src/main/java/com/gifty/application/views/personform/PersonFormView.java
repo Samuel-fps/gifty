@@ -16,9 +16,11 @@ import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
 import com.vaadin.flow.theme.lumo.LumoUtility.Gap;
+import jakarta.annotation.security.PermitAll;
 
 @PageTitle("Person Form")
 @Route(value = "person-form", layout = MainLayout.class)
+@PermitAll
 public class PersonFormView extends Composite<VerticalLayout> {
 
     public PersonFormView() {
