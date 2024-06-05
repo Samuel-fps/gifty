@@ -1,23 +1,36 @@
 package com.gifty.application.login;
 
+import com.gifty.application.user.User;
+import com.gifty.application.user.UserRepository;
+import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.notification.NotificationVariant;
 import com.vaadin.flow.data.binder.BeanValidationBinder;
 import com.vaadin.flow.data.binder.ValidationException;
 import com.vaadin.flow.data.binder.ValidationResult;
 import com.vaadin.flow.data.binder.ValueContext;
+import org.springframework.stereotype.Component;
 
+import static javax.swing.UIManager.getUI;
+
+@Component
 public class RegistrationFormBinder {
 
-    private RegistrationForm registrationForm;
+    private final RegistrationForm registrationForm;
+    private final UserRepository userRepository;
 
     /**
      * Flag for disabling first run for password validation
      */
     private boolean enablePasswordValidation;
 
-    public RegistrationFormBinder(RegistrationForm registrationForm) {
-        this.registrationForm = registrationForm;
+    public RegistrationFormBinder(UserRepository userRepository) {
+        this.registrationForm = new RegistrationForm();
+        this.userRepository = userRepository;
+    }
+
+    public RegistrationForm getRegistrationForm() {
+        return registrationForm;
     }
 
     /**
@@ -25,7 +38,7 @@ public class RegistrationFormBinder {
      * to the registration form
      */
     public void addBindingAndValidation() {
-        BeanValidationBinder<UserDetails> binder = new BeanValidationBinder<>(UserDetails.class);
+        BeanValidationBinder<User> binder = new BeanValidationBinder<>(User.class);
         binder.bindInstanceFields(registrationForm);
 
         // A custom validator for password fields
@@ -49,16 +62,18 @@ public class RegistrationFormBinder {
         // And finally the submit button
         registrationForm.getSubmitButton().addClickListener(event -> {
             try {
-                // Create empty bean to store the details into
-                UserDetails userBean = new UserDetails();
+                User userBean = new User();
 
                 // Run validators and write the values to the bean
                 binder.writeBean(userBean);
 
-                // Typically, you would here call backend to store the bean
+                userRepository.save(userBean);
 
                 // Show success message if everything went well
                 showSuccess(userBean);
+
+                // Go to loginView
+                UI.getCurrent().navigate(LoginView.class);
             } catch (ValidationException exception) {
                 // validation errors are already visible for each field,
                 // and bean-level errors are shown in the status label.
@@ -77,7 +92,7 @@ public class RegistrationFormBinder {
     private ValidationResult passwordValidator(String pass1, ValueContext ctx) {
         /*
          * Just a simple length check. A real version should check for password
-         * complexity as well!
+         * complexity as well!<
          */
 
         if (pass1 == null || pass1.length() < 8) {
@@ -102,9 +117,9 @@ public class RegistrationFormBinder {
     /**
      * We call this method when form submission has succeeded
      */
-    private void showSuccess(UserDetails userBean) {
+    private void showSuccess(User userBean) {
         Notification notification =
-                Notification.show("Data saved, welcome " + userBean.getFirstName());
+                Notification.show("Data saved, welcome " + userBean.getName());
         notification.addThemeVariants(NotificationVariant.LUMO_SUCCESS);
 
         // Here you'd typically redirect the user to another view
