@@ -1,6 +1,8 @@
 package com.gifty.application.login;
 
 import com.gifty.application.data.user.UserService;
+import com.gifty.application.views.MainView;
+import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.html.H1;
@@ -65,6 +67,10 @@ public class LoginView extends VerticalLayout implements BeforeEnterObserver {
 
     @Override
     public void beforeEnter(BeforeEnterEvent beforeEnterEvent) {
+        if (authenticationContext.getAuthentication() != null && authenticationContext.getAuthentication().isAuthenticated()) {
+            // Redirigir a la página principal
+            UI.getCurrent().navigate(MainView.class);
+        }
         // inform the user about an authentication error
         if(beforeEnterEvent.getLocation()
                 .getQueryParameters()
