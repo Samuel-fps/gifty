@@ -2,6 +2,7 @@ package com.gifty.application.login;
 
 import com.gifty.application.user.User;
 import com.gifty.application.user.UserRepository;
+import com.gifty.application.user.UserService;
 import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.notification.NotificationVariant;
@@ -17,16 +18,16 @@ import static javax.swing.UIManager.getUI;
 public class RegistrationFormBinder {
 
     private final RegistrationForm registrationForm;
-    private final UserRepository userRepository;
+    private final UserService userService;
 
     /**
      * Flag for disabling first run for password validation
      */
     private boolean enablePasswordValidation;
 
-    public RegistrationFormBinder(UserRepository userRepository) {
+    public RegistrationFormBinder(UserService userService) {
         this.registrationForm = new RegistrationForm();
-        this.userRepository = userRepository;
+        this.userService = userService;
     }
 
     public RegistrationForm getRegistrationForm() {
@@ -67,7 +68,7 @@ public class RegistrationFormBinder {
                 // Run validators and write the values to the bean
                 binder.writeBean(userBean);
 
-                userRepository.save(userBean);
+                userService.registerUser(userBean);
 
                 // Show success message if everything went well
                 showSuccess(userBean);
