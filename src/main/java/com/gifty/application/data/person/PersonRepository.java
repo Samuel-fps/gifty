@@ -1,4 +1,4 @@
-package com.gifty.application.data.gift;
+package com.gifty.application.data.person;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
@@ -6,5 +6,5 @@ import org.springframework.stereotype.Repository;
 import java.util.UUID;
 
 @Repository
-public interface GiftRepository extends JpaRepository<Gift, UUID> {
+public interface PersonRepository extends JpaRepository<Person, UUID> {
 }
