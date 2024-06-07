@@ -1,16 +1,16 @@
 package com.gifty.application.user;
 
-
-import com.vaadin.flow.component.notification.Notification;
-import com.vaadin.flow.server.VaadinSession;
-import com.vaadin.flow.server.WrappedSession;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.Optional;
+
 
 @Service
-public class UserService {
+public class UserService implements UserDetailsService {
 
     private final UserRepository userRepository;
 
@@ -27,21 +27,28 @@ public class UserService {
         userRepository.save(user);
     }
 
-    public boolean validateCredentials(String email, String password){
-        User user = userRepository.findByEmail(email);
-        Notification.show("Entrando", 3000, Notification.Position.MIDDLE);
-
-        if (user != null && passwordEncoder.matches(password, user.getPassword())){
-            // Autenticación exitosa, guardar información de usuario en la sesión
-            VaadinSession session = VaadinSession.getCurrent();
-            WrappedSession wrappedSession = session.getSession();
-
-            // Guardar información relevante del usuario en la sesión
-            wrappedSession.setAttribute("user", user);
-            return true;
+    public boolean validateCredentials(String email, String rawPassword){
+        Optional<User> userOptional = userRepository.findByEmail(email);
+        if (userOptional.isPresent()) {
+            User user = userOptional.get();
+            return passwordEncoder.matches(rawPassword, user.getPassword());
         }
+        return false;
+    }
 
-    return false;
+    @Override
+    public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
+        Optional<User> userOptional = userRepository.findByEmail(email);
+        if (userOptional.isPresent()) {
+            User user = userOptional.get();
+            return org.springframework.security.core.userdetails.User
+                    .withUsername(user.getEmail())
+                    .password(user.getPassword())
+                    .roles("USER")
+                    .build();
+        } else {
+            throw new UsernameNotFoundException("User not found");
+        }
     }
 
 }
