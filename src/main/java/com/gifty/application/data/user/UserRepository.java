@@ -1,4 +1,4 @@
-package com.gifty.application.user;
+package com.gifty.application.data.user;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;

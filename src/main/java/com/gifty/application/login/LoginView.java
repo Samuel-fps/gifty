@@ -1,7 +1,6 @@
 package com.gifty.application.login;
 
-import com.gifty.application.user.UserService;
-import com.gifty.application.views.datagrid.DataGridView;
+import com.gifty.application.data.user.UserService;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.html.H1;

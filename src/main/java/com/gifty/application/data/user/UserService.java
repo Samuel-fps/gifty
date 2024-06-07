@@ -1,4 +1,4 @@
-package com.gifty.application.user;
+package com.gifty.application.data.user;
 
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;

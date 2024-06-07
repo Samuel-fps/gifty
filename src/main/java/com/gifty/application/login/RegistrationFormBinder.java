@@ -1,8 +1,7 @@
 package com.gifty.application.login;
 
-import com.gifty.application.user.User;
-import com.gifty.application.user.UserRepository;
-import com.gifty.application.user.UserService;
+import com.gifty.application.data.user.User;
+import com.gifty.application.data.user.UserService;
 import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.notification.NotificationVariant;
@@ -11,8 +10,6 @@ import com.vaadin.flow.data.binder.ValidationException;
 import com.vaadin.flow.data.binder.ValidationResult;
 import com.vaadin.flow.data.binder.ValueContext;
 import org.springframework.stereotype.Component;
-
-import static javax.swing.UIManager.getUI;
 
 @Component
 public class RegistrationFormBinder {

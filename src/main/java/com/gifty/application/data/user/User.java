@@ -1,7 +1,11 @@
-package com.gifty.application.user;
+package com.gifty.application.data.user;
 
+import com.gifty.application.data.giftRegistry.GiftRegistry;
+import com.gifty.application.data.person.Person;
 import jakarta.persistence.*;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 @Entity
@@ -11,13 +15,29 @@ public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private UUID id;
-    private String name;
-    private String lastname;
+
+    @Column(nullable = false, unique = true)
     private String email;
+
+    @Column(nullable = false)
+    private String name;
+
+    @Column(nullable = false)
+    private String lastname;
+
+    @Column(nullable = false)
     private String password;
 
-    public User() {
-    }
+    // GiftRegistry table
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<GiftRegistry> GiftRegistries = new ArrayList<>();
+
+    // Person table
+    @OneToMany()
+    @JoinColumn(name = "person_id")
+    private List<Person> Persons = new ArrayList<>();
+
+    public User(){}
 
     public User(String name, String lastname, String email, String password) {
         this.name = name;
