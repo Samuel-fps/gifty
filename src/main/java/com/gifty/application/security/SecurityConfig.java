@@ -1,6 +1,6 @@
 package com.gifty.application.security;
 
-import com.gifty.application.login.LoginView;
+import com.gifty.application.views.LoginView;
 import com.vaadin.flow.spring.security.VaadinWebSecurity;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -21,9 +21,12 @@ public class SecurityConfig extends VaadinWebSecurity {
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-        http.authorizeHttpRequests(auth ->
-                auth.requestMatchers(
-                        AntPathRequestMatcher.antMatcher(HttpMethod.GET, "/images/*.png")).permitAll());
+        http.authorizeHttpRequests(auth -> auth.requestMatchers(AntPathRequestMatcher
+                .antMatcher(HttpMethod.GET, "/images/*.png")).permitAll());
+
+        http.authorizeHttpRequests(auth -> auth.requestMatchers(AntPathRequestMatcher
+                .antMatcher(HttpMethod.GET, "/line-awesome/**/*.svg")).permitAll());
+
         super.configure(http);
         setLoginView(http, LoginView.class);
     }
@@ -32,7 +35,6 @@ public class SecurityConfig extends VaadinWebSecurity {
     public UserDetailsService users() {
         UserDetails user = User.builder()
                 .username("user")
-                // password = password with this hash, don't tell anybody :-)
                 .password("{bcrypt}$2a$10$GRLdNijSQMUvl/au9ofL.eDwmoohzzS7.rmNSJZ.0FxO/BTk76klW")
                 .roles("USER")
                 .build();
