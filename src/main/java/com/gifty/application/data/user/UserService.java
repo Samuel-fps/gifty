@@ -1,5 +1,6 @@
 package com.gifty.application.data.user;
 
+import org.springframework.expression.spel.ast.NullLiteral;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -23,7 +24,7 @@ public class UserService implements UserDetailsService {
 
     public void registerUser(User u) {
         String encodedPassword = passwordEncoder.encode(u.getPassword());
-        User user = new User(u.getName(), u.getLastname(), u.getEmail(), encodedPassword);
+        User user = new User(u.getName(), u.getLastname(), u.getEmail(), encodedPassword, null);
         userRepository.save(user);
     }
 

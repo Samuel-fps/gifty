@@ -3,17 +3,19 @@ package com.gifty.application.data.user;
 import com.gifty.application.data.giftRegistry.GiftRegistry;
 import com.gifty.application.data.person.Person;
 import jakarta.persistence.*;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Entity
 @Table(name="user")
-public class User {
+public class User implements UserDetails {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
 
     @Column(nullable = false, unique = true)
@@ -28,6 +30,9 @@ public class User {
     @Column(nullable = false)
     private String password;
 
+    @ElementCollection(fetch = FetchType.EAGER)
+    private Set<Role> roles;
+
     // GiftRegistry table
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<GiftRegistry> GiftRegistries = new ArrayList<>();
@@ -39,11 +44,26 @@ public class User {
 
     public User(){}
 
+    public User(String name, String lastname, String email, String password, Set<Role> roles) {
+        this.name = name;
+        this.lastname = lastname;
+        this.email = email;
+        this.password = password;
+        if (roles == null || roles.isEmpty()) {
+            this.roles = new HashSet<>();
+            this.roles.add(Role.USER);
+        } else {
+            this.roles = roles;
+        }
+    }
+
     public User(String name, String lastname, String email, String password) {
         this.name = name;
         this.lastname = lastname;
         this.email = email;
         this.password = password;
+        this.roles = new HashSet<>();
+        this.roles.add(Role.USER);
     }
 
 
@@ -77,5 +97,51 @@ public class User {
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    // UserDetail method override
+
+    public Set<Role> getRoles() {
+        return roles;
+    }
+
+    public void setRoles(Set<Role> roles) {
+        this.roles = roles;
+    }
+
+    private List<GrantedAuthority> getAuthorities(Set<Role> roles) {
+        return roles.stream()
+                .map(role -> new SimpleGrantedAuthority("ROLE_" + role))
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        return getAuthorities(this.roles);
+    }
+
+    @Override
+    public String getUsername() {
+        return email;
+    }
+
+    @Override
+    public boolean isAccountNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isAccountNonLocked() {
+        return true;
+    }
+
+    @Override
+    public boolean isCredentialsNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isEnabled() {
+        return true;
     }
 }
