@@ -2,6 +2,7 @@ package com.gifty.application.login;
 
 import com.gifty.application.data.user.User;
 import com.gifty.application.data.user.UserService;
+import com.gifty.application.views.LoginView;
 import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.notification.NotificationVariant;
