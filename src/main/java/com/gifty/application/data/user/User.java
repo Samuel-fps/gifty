@@ -66,6 +66,13 @@ public class User implements UserDetails {
         this.roles.add(Role.USER);
     }
 
+    public UUID getId() {
+        return id;
+    }
+
+    public void setId(UUID id) {
+        this.id = id;
+    }
 
     public String getName() {
         return name;
@@ -97,6 +104,22 @@ public class User implements UserDetails {
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    public List<GiftRegistry> getGiftRegistries() {
+        return GiftRegistries;
+    }
+
+    public void setGiftRegistries(List<GiftRegistry> giftRegistries) {
+        GiftRegistries = giftRegistries;
+    }
+
+    public List<Person> getPersons() {
+        return Persons;
+    }
+
+    public void setPersons(List<Person> persons) {
+        Persons = persons;
     }
 
     // UserDetail method override
