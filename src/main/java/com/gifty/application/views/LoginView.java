@@ -1,7 +1,6 @@
-package com.gifty.application.login;
+package com.gifty.application.views;
 
 import com.gifty.application.data.user.UserService;
-import com.gifty.application.views.MainView;
 import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
@@ -16,6 +15,7 @@ import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
 import com.vaadin.flow.server.auth.AnonymousAllowed;
 import com.vaadin.flow.spring.security.AuthenticationContext;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -27,13 +27,12 @@ import org.springframework.security.core.userdetails.UserDetails;
 public class LoginView extends VerticalLayout implements BeforeEnterObserver {
 
     private final LoginForm login = new LoginForm();
-    private final AuthenticationContext authenticationContext;
 
     private final UserService userService;
 
+    @Autowired
     public LoginView(AuthenticationContext authenticationContext, UserService userService) {
         this.userService = userService;
-        this.authenticationContext = authenticationContext;
 
         addClassName("login-view");
         setSizeFull();
@@ -56,7 +55,7 @@ public class LoginView extends VerticalLayout implements BeforeEnterObserver {
 
         if (userService.validateCredentials(email, password)) {
             UserDetails userDetails = userService.loadUserByUsername(email);
-            Authentication authentication = new UsernamePasswordAuthenticationToken(userDetails, password, userDetails.getAuthorities());
+            Authentication authentication = new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
             SecurityContextHolder.getContext().setAuthentication(authentication);
             getUI().ifPresent(ui -> ui.navigate(""));
         } else {
@@ -67,8 +66,9 @@ public class LoginView extends VerticalLayout implements BeforeEnterObserver {
 
     @Override
     public void beforeEnter(BeforeEnterEvent beforeEnterEvent) {
-        if (authenticationContext.getAuthentication() != null && authenticationContext.getAuthentication().isAuthenticated()) {
-            // Redirigir a la página principal
+        // Verificar si ya hay un usuario autenticado
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication != null && authentication.isAuthenticated()) {
             UI.getCurrent().navigate(MainView.class);
         }
         // inform the user about an authentication error
