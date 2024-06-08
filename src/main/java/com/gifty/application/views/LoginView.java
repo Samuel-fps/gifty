@@ -34,14 +34,17 @@ public class LoginView extends VerticalLayout implements BeforeEnterObserver {
     public LoginView(AuthenticationContext authenticationContext, UserService userService) {
         this.userService = userService;
 
+        // style
         addClassName("login-view");
         setSizeFull();
         setAlignItems(Alignment.CENTER);
         setJustifyContentMode(JustifyContentMode.CENTER);
 
+        // Login form
         LoginForm loginForm = new LoginForm();
         loginForm.addLoginListener(this::handleLogin);
 
+        // Register view
         Button signinButton = new Button("Sign in");
         signinButton.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
         signinButton.addClickListener(e -> getUI().ifPresent(ui -> ui.navigate(RegistrationView.class)));
@@ -49,6 +52,7 @@ public class LoginView extends VerticalLayout implements BeforeEnterObserver {
         add(new H1("Gifty"), loginForm, signinButton);
     }
 
+    // Validate credentials
     private void handleLogin(AbstractLogin.LoginEvent event) {
         String email = event.getUsername();
         String password = event.getPassword();
