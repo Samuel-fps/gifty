@@ -1,13 +1,17 @@
 package com.gifty.application.data.user;
 
-import org.springframework.expression.spel.ast.NullLiteral;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 
 @Service
@@ -15,7 +19,7 @@ public class UserService implements UserDetailsService {
 
     private final UserRepository userRepository;
 
-    private PasswordEncoder passwordEncoder;
+    private final PasswordEncoder passwordEncoder;
 
     public UserService(UserRepository repository, PasswordEncoder passwordEncoder) {
         this.userRepository = repository;
@@ -28,28 +32,22 @@ public class UserService implements UserDetailsService {
         userRepository.save(user);
     }
 
-    public boolean validateCredentials(String email, String rawPassword){
-        Optional<User> userOptional = userRepository.findByEmail(email);
-        if (userOptional.isPresent()) {
-            User user = userOptional.get();
-            return passwordEncoder.matches(rawPassword, user.getPassword());
+    @Override
+    @Transactional
+    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+        User user = userRepository.findByEmail(username);
+        if (user == null) {
+            throw new UsernameNotFoundException("No existe este usuario: " + username);
+        } else {
+            return new org.springframework.security.core.userdetails.User(user.getUsername(), user.getPassword(),
+                    getAuthorities(user));
         }
-        return false;
     }
 
-    @Override
-    public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
-        Optional<User> userOptional = userRepository.findByEmail(email);
-        if (userOptional.isPresent()) {
-            User user = userOptional.get();
-            return org.springframework.security.core.userdetails.User
-                    .withUsername(user.getEmail())
-                    .password(user.getPassword())
-                    .roles("USER")
-                    .build();
-        } else {
-            throw new UsernameNotFoundException("User not found");
-        }
+    private static List<GrantedAuthority> getAuthorities(User user) {
+        return user.getRoles().stream().map(role -> new SimpleGrantedAuthority("ROLE_" + role))
+                .collect(Collectors.toList());
+
     }
 
 }

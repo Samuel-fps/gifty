@@ -4,6 +4,8 @@ import com.vaadin.flow.spring.security.AuthenticationContext;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 
+import java.util.Optional;
+
 @Component
 public class SecurityService {
 
@@ -14,7 +16,12 @@ public class SecurityService {
     }
 
     public UserDetails getAuthenticatedUser() {
-        return authenticationContext.getAuthenticatedUser(UserDetails.class).get();
+        Optional<UserDetails> userDetailsOptional = authenticationContext.getAuthenticatedUser(UserDetails.class);
+        if (userDetailsOptional.isPresent()) {
+            return userDetailsOptional.get();
+        } else {
+            throw new RuntimeException("There is no authenticated user");
+        }
     }
 
     public void logout() {

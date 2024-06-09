@@ -1,14 +1,12 @@
 package com.gifty.application.views;
 
 import com.gifty.application.security.SecurityService;
-import com.gifty.application.views.datagrid.DataGridView;
-import com.gifty.application.views.helloworld.HelloWorldView;
+import com.gifty.application.views.datagrid.PersonGridView;
 import com.gifty.application.views.imagegallery.ImageGalleryView;
 import com.gifty.application.views.personform.PersonFormView;
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.applayout.AppLayout;
 import com.vaadin.flow.component.button.Button;
-import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.html.H1;
 import com.vaadin.flow.component.html.Header;
@@ -32,6 +30,7 @@ import com.vaadin.flow.theme.lumo.LumoUtility.Padding;
 import com.vaadin.flow.theme.lumo.LumoUtility.TextColor;
 import com.vaadin.flow.theme.lumo.LumoUtility.Whitespace;
 import com.vaadin.flow.theme.lumo.LumoUtility.Width;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.vaadin.lineawesome.LineAwesomeIcon;
 
 public class MainLayout extends AppLayout {
@@ -77,40 +76,43 @@ public class MainLayout extends AppLayout {
         header.addClassNames(BoxSizing.BORDER, Display.FLEX, FlexDirection.COLUMN, Width.FULL);
 
         Div layout = new Div();
+
         layout.addClassNames(Display.FLEX, AlignItems.CENTER, Padding.Horizontal.LARGE);
 
         H1 appName = new H1("Gifty");
         appName.addClassNames(Margin.Vertical.MEDIUM, Margin.End.AUTO, FontSize.LARGE);
         layout.add(appName);
 
-        String u = securityService.getAuthenticatedUser().getUsername();
-        Button logout = new Button("Log out " + u, e -> securityService.logout());
-        layout.add(logout);
+        if (securityService.getAuthenticatedUser() != null) {
+            Button logout = new Button("Logout" + securityService.getAuthenticatedUser().getUsername(), click ->
+                    securityService.logout());
+            layout.add(logout);
+        }
 
         Nav nav = new Nav();
         nav.addClassNames(Display.FLEX, Overflow.AUTO, Padding.Horizontal.MEDIUM, Padding.Vertical.XSMALL);
 
-        // Wrap the links in a list; improves accessibility
         UnorderedList list = new UnorderedList();
         list.addClassNames(Display.FLEX, Gap.SMALL, ListStyleType.NONE, Margin.NONE, Padding.NONE);
         nav.add(list);
 
         for (MenuItemInfo menuItem : createMenuItems()) {
             list.add(menuItem);
-
         }
 
         header.add(layout, nav);
+
+
         return header;
     }
 
     private MenuItemInfo[] createMenuItems() {
         return new MenuItemInfo[]{ //
-                new MenuItemInfo("Hello World", LineAwesomeIcon.GLOBE_SOLID.create(), HelloWorldView.class), //
+                new MenuItemInfo("Hello World", LineAwesomeIcon.GLOBE_SOLID.create(), MainView.class), //
 
                 new MenuItemInfo("Person Form", LineAwesomeIcon.USER.create(), PersonFormView.class), //
 
-                new MenuItemInfo("Data Grid", LineAwesomeIcon.TH_SOLID.create(), DataGridView.class), //
+                new MenuItemInfo("People", LineAwesomeIcon.TH_SOLID.create(), PersonGridView.class), //
 
                 new MenuItemInfo("Image Gallery", LineAwesomeIcon.TH_LIST_SOLID.create(), ImageGalleryView.class), //
 
