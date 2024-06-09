@@ -1,8 +1,6 @@
 package com.gifty.application.views;
 
 import com.gifty.application.security.AuthenticatedUser;
-import com.vaadin.flow.component.UI;
-import com.vaadin.flow.component.login.LoginForm;
 import com.vaadin.flow.component.login.LoginI18n;
 import com.vaadin.flow.component.login.LoginOverlay;
 
@@ -15,18 +13,12 @@ import com.vaadin.flow.server.VaadinService;
 import com.vaadin.flow.server.auth.AnonymousAllowed;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
-
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
-
 import java.util.Locale;
 
 @Route("login")
 @PageTitle("Login")
 @AnonymousAllowed
 public class LoginView extends LoginOverlay implements BeforeEnterObserver {
-
-    private final LoginForm login = new LoginForm();
 
     private final AuthenticatedUser authenticatedUser;
     private final MessageSource messageSource;

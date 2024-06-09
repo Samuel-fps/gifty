@@ -31,11 +31,14 @@ import com.vaadin.flow.theme.lumo.LumoUtility.TextColor;
 import com.vaadin.flow.theme.lumo.LumoUtility.Whitespace;
 import com.vaadin.flow.theme.lumo.LumoUtility.Width;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.MessageSource;
 import org.vaadin.lineawesome.LineAwesomeIcon;
+import java.util.Locale;
 
 public class MainLayout extends AppLayout {
 
     private final SecurityService securityService;
+    private final MessageSource messageSource;
 
     public static class MenuItemInfo extends ListItem {
 
@@ -66,8 +69,9 @@ public class MainLayout extends AppLayout {
 
     }
 
-    public MainLayout(SecurityService securityService) {
+    public MainLayout(SecurityService securityService, @Autowired MessageSource messageSource) {
         this.securityService = securityService;
+        this.messageSource = messageSource;
         addToNavbar(createHeaderContent());
     }
 
@@ -84,7 +88,7 @@ public class MainLayout extends AppLayout {
         layout.add(appName);
 
         if (securityService.getAuthenticatedUser() != null) {
-            Button logout = new Button("Logout" + securityService.getAuthenticatedUser().getUsername(), click ->
+            Button logout = new Button("Logout " + securityService.getAuthenticatedUser().getUsername(), click ->
                     securityService.logout());
             layout.add(logout);
         }
@@ -108,14 +112,13 @@ public class MainLayout extends AppLayout {
 
     private MenuItemInfo[] createMenuItems() {
         return new MenuItemInfo[]{ //
-                new MenuItemInfo("Hello World", LineAwesomeIcon.GLOBE_SOLID.create(), MainView.class), //
+                new MenuItemInfo(messageSource.getMessage("menu.registry", null, Locale.getDefault()), LineAwesomeIcon.GLOBE_SOLID.create(), MainView.class), //
 
-                new MenuItemInfo("Person Form", LineAwesomeIcon.USER.create(), PersonFormView.class), //
+                // new MenuItemInfo(messageSource.getMessage("Person Form", null, Locale.getDefault()), LineAwesomeIcon.USER.create(), PersonFormView.class), //
 
-                new MenuItemInfo("People", LineAwesomeIcon.TH_SOLID.create(), PersonGridView.class), //
+                new MenuItemInfo(messageSource.getMessage("menu.people", null, Locale.getDefault()), LineAwesomeIcon.TH_SOLID.create(), PersonGridView.class), //
 
-                new MenuItemInfo("Image Gallery", LineAwesomeIcon.TH_LIST_SOLID.create(), ImageGalleryView.class), //
-
+                // new MenuItemInfo(messageSource.getMessage("Image Gallery", null, Locale.getDefault()), LineAwesomeIcon.TH_LIST_SOLID.create(), ImageGalleryView.class), //
         };
     }
 
