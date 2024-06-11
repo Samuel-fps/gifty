@@ -1,7 +1,6 @@
 package com.gifty.application.data.person;
 
 import com.gifty.application.data.gift.Gift;
-import com.gifty.application.data.user.User;
 import jakarta.persistence.*;
 
 import java.util.ArrayList;
@@ -13,9 +12,10 @@ import java.util.UUID;
 @Table(name = "person")
 public class Person {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
 
+    @Column(nullable = false)
     private String name;
 
     // Gift table

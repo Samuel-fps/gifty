@@ -1,9 +1,6 @@
 package com.gifty.application.views;
 
 import com.gifty.application.security.SecurityService;
-import com.gifty.application.views.datagrid.PersonGridView;
-import com.gifty.application.views.imagegallery.ImageGalleryView;
-import com.gifty.application.views.personform.PersonFormView;
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.applayout.AppLayout;
 import com.vaadin.flow.component.button.Button;
@@ -114,11 +111,11 @@ public class MainLayout extends AppLayout {
         return new MenuItemInfo[]{ //
                 new MenuItemInfo(messageSource.getMessage("menu.registry", null, Locale.getDefault()), LineAwesomeIcon.GLOBE_SOLID.create(), MainView.class), //
 
-                // new MenuItemInfo(messageSource.getMessage("Person Form", null, Locale.getDefault()), LineAwesomeIcon.USER.create(), PersonFormView.class), //
+                // new MenuItemInfo(messageSource.getMessage("menu.registry", null, Locale.getDefault()), LineAwesomeIcon.USER.create(), com.gifty.application.views.datagrid.PersonGridView.class), //
 
                 new MenuItemInfo(messageSource.getMessage("menu.people", null, Locale.getDefault()), LineAwesomeIcon.TH_SOLID.create(), PersonGridView.class), //
 
-                // new MenuItemInfo(messageSource.getMessage("Image Gallery", null, Locale.getDefault()), LineAwesomeIcon.TH_LIST_SOLID.create(), ImageGalleryView.class), //
+                // new MenuItemInfo(messageSource.getMessage("menu.registry", null, Locale.getDefault()), LineAwesomeIcon.TH_LIST_SOLID.create(), ImageGalleryView.class), //
         };
     }
 

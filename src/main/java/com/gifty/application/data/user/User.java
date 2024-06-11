@@ -38,7 +38,7 @@ public class User implements UserDetails {
     private List<GiftRegistry> GiftRegistries = new ArrayList<>();
 
     // Person table
-    @OneToMany()
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
     @JoinColumn(name = "person_id")
     private List<Person> Persons = new ArrayList<>();
 
