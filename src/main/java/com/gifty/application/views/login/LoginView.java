@@ -1,4 +1,4 @@
-package com.gifty.application.views;
+package com.gifty.application.views.login;
 
 import com.gifty.application.security.AuthenticatedUser;
 import com.vaadin.flow.component.login.LoginI18n;
@@ -50,8 +50,8 @@ public class LoginView extends LoginOverlay implements BeforeEnterObserver {
     @Override
     public void beforeEnter(BeforeEnterEvent beforeEnterEvent) {
         if (authenticatedUser.get().isPresent()) {
-            setOpened(false);
-            beforeEnterEvent.forwardTo("");
+            //setOpened(false);
+            //beforeEnterEvent.forwardTo("");
         }
         setError(beforeEnterEvent.getLocation().getQueryParameters().getParameters().containsKey("error"));
     }

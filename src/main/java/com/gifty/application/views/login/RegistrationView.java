@@ -1,4 +1,4 @@
-package com.gifty.application.views;
+package com.gifty.application.views.login;
 
 import com.gifty.application.login.RegistrationForm;
 import com.gifty.application.login.RegistrationFormBinder;
