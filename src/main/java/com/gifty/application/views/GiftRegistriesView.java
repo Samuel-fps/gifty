@@ -6,6 +6,7 @@ import com.gifty.application.data.giftRegistry.State;
 import com.gifty.application.data.user.UserService;
 import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.button.Button;
+import com.vaadin.flow.component.combobox.ComboBox;
 import com.vaadin.flow.component.grid.Grid;
 
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
@@ -16,7 +17,6 @@ import com.vaadin.flow.data.provider.ListDataProvider;
 import com.vaadin.flow.data.renderer.ComponentRenderer;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
-import com.vaadin.flow.router.RouteParameters;
 import jakarta.annotation.security.PermitAll;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
@@ -46,24 +46,34 @@ public class GiftRegistriesView extends VerticalLayout {
         var grid = new Grid<>(GiftRegistry.class);
         // Formulario de entrada
         TextField newNameField = new TextField("Name");
-        Button addButton = new Button("Add", e -> {
-            String name = newNameField.getValue();
 
-            // Crear un nuevo objeto GiftRegistry
-            GiftRegistry newRegistry = new GiftRegistry();
-            newRegistry.setName(name);
-            newRegistry.setTotalPrice(BigDecimal.ZERO);
-            newRegistry.setState(State.PENDIENTE);
-            newRegistry.setUser(userService.getAuthenticatedUser());
 
-            // Guardar en el repositorio
-            giftRegistryRepository.save(newRegistry);
+        Button addButton = new Button("Add");
 
-            // Actualizar el Grid
-            dataProvider.getItems().add(newRegistry);
-            dataProvider.refreshAll();
-            newNameField.clear();
+        addButton.addClickListener(e -> {
+            String name = newNameField.getValue().trim();
+            if (name.isEmpty()) {
+                newNameField.setInvalid(true);
+                newNameField.setErrorMessage("Name cannot be empty");
+            } else {
+                // Crear un nuevo objeto GiftRegistry
+                GiftRegistry newRegistry = new GiftRegistry();
+                newRegistry.setName(name);
+                newRegistry.setTotalPrice(BigDecimal.ZERO);
+                newRegistry.setState(State.PENDIENTE);
+                newRegistry.setUser(userService.getAuthenticatedUser());
+
+                // Guardar en el repositorio
+                giftRegistryRepository.save(newRegistry);
+
+                // Actualizar el Grid
+                dataProvider.getItems().add(newRegistry);
+                dataProvider.refreshAll();
+                newNameField.clear();
+            }
         });
+
+        grid.removeAllColumns();
 
         // Agregar columna para el nombre editable
         grid.addColumn(new ComponentRenderer<>(person -> {
@@ -85,15 +95,40 @@ public class GiftRegistriesView extends VerticalLayout {
             return nameField;
         })).setHeader("Name");
 
-        grid.setColumns("totalPrice", "state");
+        // Agregar columna para el estado con ComboBox
+        grid.addColumn(new ComponentRenderer<>(person -> {
+            ComboBox<State> stateComboBox = new ComboBox<>();
+            stateComboBox.setItems(State.values());
+            stateComboBox.setValue(person.getState());
+
+            stateComboBox.addValueChangeListener(event -> {
+                person.setState(event.getValue());
+                giftRegistryRepository.save(person);
+                dataProvider.refreshItem(person);
+            });
+
+            return stateComboBox;
+        })).setHeader("State");
+
+        // Agregar columna para el botón de eliminar
+        grid.addComponentColumn(person -> {
+            Button deleteButton = new Button("Delete");
+            deleteButton.addClickListener(e -> {
+                giftRegistryRepository.delete(person);
+                dataProvider.getItems().remove(person);
+                dataProvider.refreshAll();
+            });
+            return deleteButton;
+        }).setHeader("Actions");
+
+
+
+        //grid.setColumns("totalPrice", "state");
         grid.setDataProvider(dataProvider);
 
         grid.addItemClickListener(event -> {
             // Obtener el elemento de la fila clicada
             GiftRegistry selectedList = event.getItem();
-
-            // Construir los parámetros de la ruta
-            RouteParameters routeParameters = new RouteParameters("name", selectedList.getName());
 
             // Navegar a la vista de detalle (DetailView) con los parámetros
             UI.getCurrent().navigate(GiftRegistryView.class, selectedList.getName());
@@ -101,5 +136,9 @@ public class GiftRegistriesView extends VerticalLayout {
 
         HorizontalLayout formLayout = new HorizontalLayout(newNameField, addButton);
         add(grid, formLayout);
+    }
+
+    private void refreshGrid() {
+        dataProvider.refreshAll();
     }
 }
