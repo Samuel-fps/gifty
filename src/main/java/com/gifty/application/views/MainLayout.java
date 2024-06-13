@@ -111,11 +111,11 @@ public class MainLayout extends AppLayout {
         return new MenuItemInfo[]{ //
                 new MenuItemInfo(messageSource.getMessage("menu.registry", null, Locale.getDefault()), LineAwesomeIcon.GLOBE_SOLID.create(), MainView.class), //
 
-                // new MenuItemInfo(messageSource.getMessage("menu.registry", null, Locale.getDefault()), LineAwesomeIcon.USER.create(), com.gifty.application.views.datagrid.PersonGridView.class), //
+                //new MenuItemInfo(messageSource.getMessage("menu.registry", null, Locale.getDefault()), LineAwesomeIcon.USER.create(), ), //
 
                 new MenuItemInfo(messageSource.getMessage("menu.people", null, Locale.getDefault()), LineAwesomeIcon.TH_SOLID.create(), PersonGridView.class), //
 
-                // new MenuItemInfo(messageSource.getMessage("menu.registry", null, Locale.getDefault()), LineAwesomeIcon.TH_LIST_SOLID.create(), ImageGalleryView.class), //
+                new MenuItemInfo(messageSource.getMessage("menu.registry", null, Locale.getDefault()), LineAwesomeIcon.TH_LIST_SOLID.create(), GiftRegistriesView.class), //
         };
     }
 
