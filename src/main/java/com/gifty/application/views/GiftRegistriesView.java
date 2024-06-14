@@ -9,6 +9,7 @@ import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.combobox.ComboBox;
 import com.vaadin.flow.component.grid.Grid;
 
+import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.TextField;
@@ -134,8 +135,13 @@ public class GiftRegistriesView extends VerticalLayout {
             // Obtener el elemento de la fila clicada
             GiftRegistry selectedList = event.getItem();
 
-            // Navegar a la vista de detalle (DetailView) con los parámetros
-            UI.getCurrent().navigate(GiftRegistryView.class, selectedList.getId().toString());
+            if (selectedList != null && selectedList.getId() != null) {
+                // Navegar a la vista de detalle (DetailView) con los parámetros
+                UI.getCurrent().navigate(GiftRegistryView.class, selectedList.getId().toString());
+            } else {
+                Notification.show("La lista seleccionada no existe, actualiza la página",
+                        3000, Notification.Position.BOTTOM_START);
+            }
         });
 
         HorizontalLayout formLayout = new HorizontalLayout(newNameField, addButton);
