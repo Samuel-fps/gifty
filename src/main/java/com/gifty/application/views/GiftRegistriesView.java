@@ -75,6 +75,9 @@ public class GiftRegistriesView extends VerticalLayout {
 
         grid.removeAllColumns();
 
+        // Agregar columna para el precio total
+        grid.addColumn(GiftRegistry::getId).setHeader("ID");
+
         // Agregar columna para el nombre editable
         grid.addColumn(new ComponentRenderer<>(person -> {
             TextField nameField = new TextField();
@@ -110,6 +113,9 @@ public class GiftRegistriesView extends VerticalLayout {
             return stateComboBox;
         })).setHeader("State");
 
+        // Agregar columna para el precio total
+        grid.addColumn(GiftRegistry::getTotalPrice).setHeader("Total Price");
+
         // Agregar columna para el botón de eliminar
         grid.addComponentColumn(person -> {
             Button deleteButton = new Button("Delete");
@@ -121,8 +127,6 @@ public class GiftRegistriesView extends VerticalLayout {
             return deleteButton;
         }).setHeader("Actions");
 
-
-
         //grid.setColumns("totalPrice", "state");
         grid.setDataProvider(dataProvider);
 
@@ -131,7 +135,7 @@ public class GiftRegistriesView extends VerticalLayout {
             GiftRegistry selectedList = event.getItem();
 
             // Navegar a la vista de detalle (DetailView) con los parámetros
-            UI.getCurrent().navigate(GiftRegistryView.class, selectedList.getName());
+            UI.getCurrent().navigate(GiftRegistryView.class, selectedList.getId().toString());
         });
 
         HorizontalLayout formLayout = new HorizontalLayout(newNameField, addButton);

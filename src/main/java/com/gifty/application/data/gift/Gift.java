@@ -3,6 +3,7 @@ package com.gifty.application.data.gift;
 import com.gifty.application.data.giftRegistry.GiftRegistry;
 import com.gifty.application.data.person.Person;
 import jakarta.persistence.*;
+import org.hibernate.annotations.Type;
 
 import java.math.BigDecimal;
 import java.util.Objects;
@@ -12,7 +13,7 @@ import java.util.UUID;
 @Table(name="gift")
 public class Gift {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
 
     private String name;

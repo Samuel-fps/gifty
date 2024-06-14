@@ -2,7 +2,9 @@ package com.gifty.application.data.giftRegistry;
 
 import org.springframework.stereotype.Service;
 
+import java.util.Collections;
 import java.util.List;
+import java.util.UUID;
 
 @Service
 public class GiftRegistryService {
@@ -15,5 +17,9 @@ public class GiftRegistryService {
 
     public List<GiftRegistry> getAllGiftRegistry(){
         return giftRegistryRepository.findAll();
+    }
+
+    public GiftRegistry getById(UUID id){
+        return giftRegistryRepository.findAllById(Collections.singletonList(id)).iterator().next();
     }
 }
