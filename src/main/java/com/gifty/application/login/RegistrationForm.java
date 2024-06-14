@@ -16,7 +16,7 @@ public class RegistrationForm extends FormLayout {
 
     private H3 title;
 
-    private TextField firstName;
+    private TextField name;
     private TextField lastName;
 
     private EmailField email;
@@ -33,8 +33,7 @@ public class RegistrationForm extends FormLayout {
 
     public RegistrationForm() {
         title = new H3("Sign up");
-        firstName = new TextField("First name");
-        lastName = new TextField("Last name");
+        name = new TextField("Name");
         email = new EmailField("Email");
 
         allowMarketing = new Checkbox("Allow Marketing Emails?");
@@ -43,7 +42,7 @@ public class RegistrationForm extends FormLayout {
         password = new PasswordField("Password");
         passwordConfirm = new PasswordField("Confirm password");
 
-        setRequiredIndicatorVisible(firstName, lastName, email, password,
+        setRequiredIndicatorVisible(name, email, password,
                 passwordConfirm);
 
         errorMessageField = new Span();
@@ -51,7 +50,7 @@ public class RegistrationForm extends FormLayout {
         submitButton = new Button("Sign up");
         submitButton.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
 
-        add(title, firstName, lastName, email, password,
+        add(title, name, email, password,
                 passwordConfirm, allowMarketing, errorMessageField,
                 submitButton);
 
