@@ -12,7 +12,6 @@ import jakarta.annotation.security.PermitAll;
 
 @PageTitle("Gifty")
 @Route(value = "", layout = MainLayout.class)
-@RouteAlias(value = "", layout = MainLayout.class)
 @PermitAll
 public class MainView extends HorizontalLayout {
 
