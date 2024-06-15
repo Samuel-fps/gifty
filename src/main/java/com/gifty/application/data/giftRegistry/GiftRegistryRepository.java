@@ -9,5 +9,6 @@ import java.util.UUID;
 
 @Repository
 public interface GiftRegistryRepository extends JpaRepository<GiftRegistry, UUID> {
-    List<GiftRegistry> findByUser(User user);
+    List<GiftRegistry> findAllByUser(User user);
+    GiftRegistry findGiftRegistryById(UUID id);
 }

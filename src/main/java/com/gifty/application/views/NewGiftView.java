@@ -1,13 +1,19 @@
 package com.gifty.application.views;
 
+import com.gifty.application.data.gift.Gift;
 import com.gifty.application.data.gift.GiftService;
+import com.gifty.application.data.gift.State;
 import com.gifty.application.data.giftRegistry.GiftRegistry;
 import com.gifty.application.data.giftRegistry.GiftRegistryService;
+import com.gifty.application.data.person.Person;
+import com.gifty.application.data.person.PersonService;
+import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.button.Button;
+import com.vaadin.flow.component.combobox.ComboBox;
 import com.vaadin.flow.component.formlayout.FormLayout;
 import com.vaadin.flow.component.html.Div;
+import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.orderedlayout.FlexLayout;
-import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.BigDecimalField;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.router.*;
@@ -15,18 +21,20 @@ import jakarta.annotation.security.PermitAll;
 
 import java.util.UUID;
 
-@PageTitle("New Gift")
+@PageTitle("Gifty")
 @Route(value = "new-gift", layout = MainLayout.class)
 @PermitAll
 public class NewGiftView extends FlexLayout implements HasUrlParameter<String> {
 
     private final GiftService giftService;
     private final GiftRegistryService giftRegistryService;
+    private final PersonService personService;
     private GiftRegistry giftRegistry;
 
-    public NewGiftView(GiftService giftService, GiftRegistryService giftregistryService) {
+    public NewGiftView(GiftService giftService, GiftRegistryService giftregistryService, PersonService personService) {
         this.giftService = giftService;
         this.giftRegistryService = giftregistryService;
+        this.personService = personService;
 
         // Div para contener el formulario con estilos de CSS
         Div contentDiv = new Div();
@@ -41,8 +49,30 @@ public class NewGiftView extends FlexLayout implements HasUrlParameter<String> {
         BigDecimalField priceField = new BigDecimalField("Precio");
         priceField.setSuffixComponent((new Div("€")));
 
-        Button saveButton = new Button("Guardar"); //, e -> save(nameField.getValue(), urlField.getValue(), priceField.getValue()));
-        formLayout.add(nameField, urlField, priceField, saveButton);
+        ComboBox<Person> personComboBox = new ComboBox<>("Persona");
+        personComboBox.setItems(personService.getAllPersons());
+        personComboBox.setItemLabelGenerator(Person::getName);
+
+        Button saveButton = new Button("Guardar", e -> {
+            if (nameField.getValue().trim().isEmpty()) {
+                nameField.setInvalid(true);
+                nameField.setErrorMessage("Name cannot be empty");
+            } else {
+                Gift newGift = new Gift(nameField.getValue(), urlField.getValue(), priceField.getValue(),
+                        State.POR_COMPRAR, personComboBox.getValue());
+                giftregistryService.addGift(giftRegistry, newGift);
+                giftService.save(newGift);
+                Notification.show("Regalo añadido a " + giftRegistry.getName(),
+                        5000, Notification.Position.TOP_CENTER);
+                UI.getCurrent().navigate(NewGiftView.class, giftRegistry.getId().toString());
+            }
+        });
+
+        Button cancelButton = new Button("Cancelar", e -> {
+            UI.getCurrent().navigate(GiftRegistryView.class, giftRegistry.getId().toString());
+        });
+
+        formLayout.add(nameField, urlField, priceField, personComboBox, saveButton, cancelButton);
 
         // Configurar el FormLayout para una sola columna
         formLayout.setResponsiveSteps(
@@ -53,18 +83,23 @@ public class NewGiftView extends FlexLayout implements HasUrlParameter<String> {
         add(contentDiv);
 
         // Back link
-        //RouterLink backLink = new RouterLink("Volver", GiftRegistryView.class, giftRegistry.getId().toString());
+        // RouterLink backLink = new RouterLink("Volver a lista", GiftRegistryView.class, giftRegistry.getId().toString());
         //add(backLink);
     }
 
     @Override
     public void setParameter(BeforeEvent event, String parameter) {
         if (parameter != null) {
-            UUID uuid = UUID.fromString(parameter);
-            //giftRegistry = giftRegistryService.getById(uuid);
+            setGiftRegistry(UUID.fromString(parameter));
         } else {
             giftRegistry = null;
         }
     }
+
+    public void setGiftRegistry(UUID uuid){
+        giftRegistry = giftRegistryService.getGiftRegistryById(uuid);
+    }
+
+
 }
 

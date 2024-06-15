@@ -1,8 +1,8 @@
 package com.gifty.application.data.giftRegistry;
 
+import com.gifty.application.data.gift.Gift;
 import org.springframework.stereotype.Service;
 
-import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
 
@@ -10,6 +10,10 @@ import java.util.UUID;
 public class GiftRegistryService {
 
     GiftRegistryRepository giftRegistryRepository;
+
+    public GiftRegistryService(GiftRegistryRepository giftRegistryRepository) {
+        this.giftRegistryRepository = giftRegistryRepository;
+    }
 
     public void save(GiftRegistry giftRegistry){
         giftRegistryRepository.save(giftRegistry);
@@ -19,7 +23,14 @@ public class GiftRegistryService {
         return giftRegistryRepository.findAll();
     }
 
-    public GiftRegistry getById(UUID id){
-        return giftRegistryRepository.findAllById(Collections.singletonList(id)).iterator().next();
+    public GiftRegistry getGiftRegistryById(UUID id){
+        return giftRegistryRepository.findGiftRegistryById(id);
+    }
+
+    public GiftRegistry addGift(GiftRegistry giftRegistry, Gift gift){
+        giftRegistry.getGifts().add(gift);
+        giftRegistry.setTotalPrice(giftRegistry.getTotalPrice().add(gift.getPrice()));
+        giftRegistryRepository.save(giftRegistry);
+        return giftRegistry;
     }
 }

@@ -31,7 +31,7 @@ public class Gift {
 
     public Gift(){}
 
-    public Gift(String name, String url, BigDecimal price, State state, GiftRegistry giftRegistry, Person person) {
+    public Gift(String name, String url, BigDecimal price, State state, Person person) {
         this.name = name;
         this.url = url;
         this.price = price;

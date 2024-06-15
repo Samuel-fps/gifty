@@ -41,7 +41,7 @@ public class GiftRegistriesView extends VerticalLayout {
         this.userService = userService;
         this.messageSource = messageSource;
 
-        List<GiftRegistry> registries = giftRegistryRepository.findByUser(userService.getAuthenticatedUser());
+        List<GiftRegistry> registries = giftRegistryRepository.findAllByUser(userService.getAuthenticatedUser());
         dataProvider = new ListDataProvider<>(registries);
 
         var grid = new Grid<>(GiftRegistry.class);
@@ -145,7 +145,7 @@ public class GiftRegistriesView extends VerticalLayout {
         });
 
         HorizontalLayout formLayout = new HorizontalLayout(newNameField, addButton);
-        add(grid, formLayout);
+        add(formLayout, grid);
     }
 
     private void refreshGrid() {

@@ -2,12 +2,12 @@ package com.gifty.application.data.giftRegistry;
 
 import com.gifty.application.data.gift.Gift;
 import com.gifty.application.data.user.User;
-import com.vaadin.flow.router.RouteParameters;
 import jakarta.persistence.*;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.UUID;
 
 @Entity
@@ -31,17 +31,17 @@ public class GiftRegistry {
     private User user;
 
     // gift table
-    @OneToMany
+    @OneToMany(fetch = FetchType.EAGER)
+    @JoinColumn(name = "giftRegistry_id")
     private List<Gift> gifts = new ArrayList<>();
 
     public GiftRegistry(){}
-
 
     public GiftRegistry(UUID id, String name, BigDecimal price, State state) {
         this.id = id;
         this.name = name;
         this.totalPrice = price != null ? price : BigDecimal.ZERO;
-        this.state = State.PENDIENTE;
+        this.state = Objects.requireNonNullElse(state, State.PENDIENTE);
     }
 
     public UUID getId() {
