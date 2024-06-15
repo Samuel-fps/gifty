@@ -1,7 +1,7 @@
 package com.gifty.application.views.login;
 
-import com.gifty.application.login.RegistrationForm;
-import com.gifty.application.login.RegistrationFormBinder;
+import com.gifty.application.registration.RegistrationForm;
+import com.gifty.application.registration.RegistrationFormBinder;
 import com.vaadin.flow.component.html.Span;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.router.PageTitle;
