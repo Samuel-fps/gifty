@@ -29,7 +29,7 @@ public class UserService implements UserDetailsService {
         this.passwordEncoder = passwordEncoder;
     }
 
-    public void registerUser(User u) {
+    public void registerNewUserAccount(User u) {
         String encodedPassword = passwordEncoder.encode(u.getPassword());
         User user = new User(u.getName(), u.getLastname(), u.getEmail(), encodedPassword, null);
         userRepository.save(user);
