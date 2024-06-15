@@ -1,4 +1,4 @@
-package com.gifty.application.login;
+package com.gifty.application.registration;
 
 import com.gifty.application.data.user.User;
 import com.gifty.application.data.user.UserService;
@@ -66,7 +66,7 @@ public class RegistrationFormBinder {
                 // Run validators and write the values to the bean
                 binder.writeBean(userBean);
 
-                userService.registerUser(userBean);
+                userService.registerNewUserAccount(userBean);
 
                 // Show success message if everything went well
                 showSuccess(userBean);

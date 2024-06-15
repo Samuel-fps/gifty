@@ -1,4 +1,4 @@
-package com.gifty.application.login;
+package com.gifty.application.registration;
 
 import com.vaadin.flow.component.HasValueAndElement;
 import com.vaadin.flow.component.button.Button;
@@ -36,9 +36,6 @@ public class RegistrationForm extends FormLayout {
         name = new TextField("Name");
         email = new EmailField("Email");
 
-        allowMarketing = new Checkbox("Allow Marketing Emails?");
-        allowMarketing.getStyle().set("margin-top", "10px");
-
         password = new PasswordField("Password");
         passwordConfirm = new PasswordField("Confirm password");
 
@@ -51,7 +48,7 @@ public class RegistrationForm extends FormLayout {
         submitButton.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
 
         add(title, name, email, password,
-                passwordConfirm, allowMarketing, errorMessageField,
+                passwordConfirm, errorMessageField,
                 submitButton);
 
         // Max width of the Form
