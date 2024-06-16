@@ -12,6 +12,7 @@ import com.vaadin.flow.component.combobox.ComboBox;
 import com.vaadin.flow.component.formlayout.FormLayout;
 import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.notification.Notification;
+import com.vaadin.flow.component.notification.NotificationVariant;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.BigDecimalField;
 import com.vaadin.flow.component.textfield.TextField;
@@ -23,7 +24,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.UUID;
 
-@Route(value = "edit-gift/:giftId/:giftRegistryId", layout = MainLayout.class)
+@Route(value = "edit-gift/:giftId/:giftRegistryId?", layout = MainLayout.class)
 @PermitAll
 public class GiftDetailsView extends VerticalLayout implements HasUrlParameter<String> {
 
@@ -73,7 +74,8 @@ public class GiftDetailsView extends VerticalLayout implements HasUrlParameter<S
                 Notification.show("Regalo actualizado", 3000, Notification.Position.TOP_CENTER);
                 UI.getCurrent().navigate(GiftRegistryView.class, giftRegistry.getId().toString());
             } else {
-                Notification.show("No se pudo guardar el regalo", 3000, Notification.Position.BOTTOM_START);
+                Notification.show("No se pudo guardar el regalo", 3000, Notification.Position.BOTTOM_START)
+                            .addThemeVariants(NotificationVariant.LUMO_ERROR);
             }
 
         });
@@ -114,7 +116,7 @@ public class GiftDetailsView extends VerticalLayout implements HasUrlParameter<S
                 }
             } else {
                 // Manejo de error si los parámetros no son válidos
-                Notification.show("Parámetros de URL inválidos", 5000, Notification.Position.TOP_CENTER);
+                Notification.show("Parámetros de URL inválidos " + params.length, 5000, Notification.Position.TOP_CENTER);
                 UI.getCurrent().navigate(GiftRegistryView.class);
             }
         } else {

@@ -1,5 +1,6 @@
 package com.gifty.application.views;
 
+import com.gifty.application.config.MessageUtil;
 import com.gifty.application.data.gift.Gift;
 import com.gifty.application.data.gift.GiftService;
 import com.gifty.application.data.gift.State;
@@ -13,6 +14,7 @@ import com.vaadin.flow.component.combobox.ComboBox;
 import com.vaadin.flow.component.formlayout.FormLayout;
 import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.notification.Notification;
+import com.vaadin.flow.component.notification.NotificationVariant;
 import com.vaadin.flow.component.orderedlayout.FlexLayout;
 import com.vaadin.flow.component.textfield.BigDecimalField;
 import com.vaadin.flow.component.textfield.TextField;
@@ -36,55 +38,54 @@ public class NewGiftView extends FlexLayout implements HasUrlParameter<String> {
         this.giftRegistryService = giftregistryService;
         this.personService = personService;
 
-        // Div para contener el formulario con estilos de CSS
+        // Div form style
         Div contentDiv = new Div();
-        contentDiv.setWidth("400px"); // Ancho máximo del formulario
-        contentDiv.getStyle().set("margin", "0 auto"); // Centrar horizontalmente
+        contentDiv.setWidth("400px");
+        contentDiv.getStyle().set("margin", "0 auto");
 
-        // Formulario para crear un nuevo regalo
+        // form new gift
         FormLayout formLayout = new FormLayout();
 
-        TextField nameField = new TextField("Nombre");
-        TextField urlField = new TextField("URL");
-        BigDecimalField priceField = new BigDecimalField("Precio");
+        TextField nameField = new TextField(MessageUtil.getMessage("text.formName"));
+        TextField urlField = new TextField(MessageUtil.getMessage("text.formUrl"));
+        BigDecimalField priceField = new BigDecimalField(MessageUtil.getMessage("text.price"));
         priceField.setSuffixComponent((new Div("€")));
 
-        ComboBox<Person> personComboBox = new ComboBox<>("Persona");
+        ComboBox<Person> personComboBox = new ComboBox<>(MessageUtil.getMessage("text.formPerson"));
         personComboBox.setItems(personService.getAllPersons());
         personComboBox.setItemLabelGenerator(Person::getName);
 
-        Button saveButton = new Button("Guardar", e -> {
-            if (nameField.getValue().trim().isEmpty()) {
+        Button saveButton = new Button(MessageUtil.getMessage("button.save"), e -> {
+            if (nameField.getValue().trim().isEmpty()) { // Name empty
                 nameField.setInvalid(true);
-                nameField.setErrorMessage("Name cannot be empty");
+                nameField.setErrorMessage(MessageUtil.getMessage("error.nameEmpty"));
             } else {
                 Gift newGift = new Gift(nameField.getValue(), urlField.getValue(), priceField.getValue(),
                         State.POR_COMPRAR, personComboBox.getValue());
+
+                // Save gift
                 giftService.save(newGift);
                 giftregistryService.addGift(giftRegistry, newGift);
-                Notification.show("Regalo añadido a " + giftRegistry.getName(),
-                        5000, Notification.Position.TOP_CENTER);
+
+                Notification.show(MessageUtil.getMessage("notification.addedGift") + giftRegistry.getName(),
+                                5000, Notification.Position.TOP_CENTER)
+                            .addThemeVariants(NotificationVariant.LUMO_SUCCESS);
                 UI.getCurrent().navigate(GiftRegistryView.class, giftRegistry.getId().toString());
             }
         });
 
-        Button cancelButton = new Button("Cancelar", e -> {
-            UI.getCurrent().navigate(GiftRegistryView.class, giftRegistry.getId().toString());
-        });
+        Button cancelButton = new Button(MessageUtil.getMessage("button.cancel"), e ->
+            UI.getCurrent().navigate(GiftRegistryView.class, giftRegistry.getId().toString())
+        );
 
         formLayout.add(nameField, urlField, priceField, personComboBox, saveButton, cancelButton);
 
-        // Configurar el FormLayout para una sola columna
         formLayout.setResponsiveSteps(
-                new FormLayout.ResponsiveStep("0", 1) // 1 columna cuando el ancho es 0px o más
+                new FormLayout.ResponsiveStep("0", 1)
         );
 
         contentDiv.add(formLayout);
         add(contentDiv);
-
-        // Back link
-        // RouterLink backLink = new RouterLink("Volver a lista", GiftRegistryView.class, giftRegistry.getId().toString());
-        //add(backLink);
     }
 
     @Override

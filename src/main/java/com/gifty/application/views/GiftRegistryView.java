@@ -1,11 +1,13 @@
 package com.gifty.application.views;
 
+import com.gifty.application.config.MessageUtil;
 import com.gifty.application.data.gift.Gift;
 import com.gifty.application.data.giftRegistry.GiftRegistryService;
 import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.notification.Notification;
+import com.vaadin.flow.component.notification.NotificationVariant;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.router.*;
 import jakarta.annotation.security.PermitAll;
@@ -28,12 +30,12 @@ public class GiftRegistryView extends VerticalLayout implements HasUrlParameter<
         this.grid = new Grid<>(Gift.class);
 
         // New gift button
-        Button addGiftButton = new Button("Añadir Nuevo Regalo", e -> {
+        Button addGiftButton = new Button(MessageUtil.getMessage("button.addNewGift"), e -> {
             if (giftRegistryId != null) {
                 UI.getCurrent().navigate(NewGiftView.class, giftRegistryId.toString());
             } else {
-                Notification.show("La lista seleccionada no existe, actualiza la página",
-                        5000, Notification.Position.BOTTOM_START);
+                Notification.show(MessageUtil.getMessage("error.listNotExist"), 5000, Notification.Position.TOP_CENTER)
+                            .addThemeVariants(NotificationVariant.LUMO_ERROR);
             }
         });
 
@@ -43,7 +45,12 @@ public class GiftRegistryView extends VerticalLayout implements HasUrlParameter<
         // Click event on grid
         grid.addItemClickListener(event -> {
             Gift selectedGift = event.getItem();
-            UI.getCurrent().navigate("edit-gift/" + selectedGift.getId() + "/" + giftRegistryId);
+            if (selectedGift != null) {
+                UI.getCurrent().navigate("edit-gift/" + selectedGift.getId() + "/" + giftRegistryId.toString());
+            } else {
+                Notification.show(MessageUtil.getMessage("error.nameEmpty"), 5000, Notification.Position.TOP_CENTER)
+                            .addThemeVariants(NotificationVariant.LUMO_ERROR);
+            }
         });
 
         add(addGiftButton, grid);
@@ -51,15 +58,21 @@ public class GiftRegistryView extends VerticalLayout implements HasUrlParameter<
         //refreshGrid();
 
         // Back link
-        RouterLink backLink = new RouterLink("Volver", GiftRegistriesView.class);
+        RouterLink backLink = new RouterLink(MessageUtil.getMessage("link.back"), GiftRegistriesView.class);
         add(backLink);
     }
 
     @Override
     public void setParameter(BeforeEvent event, String parameter) {
-        UUID giftRegistryId = UUID.fromString(parameter);
-        setGiftRegistryId(giftRegistryId);
-        refreshGrid();
+        if (parameter != null) {
+            UUID id = UUID.fromString(parameter);
+            setGiftRegistryId(id);
+            refreshGrid();
+        } else {
+            Notification.show(MessageUtil.getMessage("notification.registryIdNotValid"), 5000, Notification.Position.TOP_CENTER)
+                        .addThemeVariants(NotificationVariant.LUMO_ERROR);
+            UI.getCurrent().navigate(GiftRegistriesView.class);
+        }
     }
 
     public void setGiftRegistryId(UUID id){
