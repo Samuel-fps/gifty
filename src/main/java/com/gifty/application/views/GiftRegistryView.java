@@ -27,9 +27,7 @@ public class GiftRegistryView extends VerticalLayout implements HasUrlParameter<
         this.giftRegistryService = giftRegistryService;
         this.grid = new Grid<>(Gift.class);
 
-        grid.setColumns("name", "price", "state", "person", "url");
-
-        // Botón para añadir nuevo regalo
+        // New gift button
         Button addGiftButton = new Button("Añadir Nuevo Regalo", e -> {
             if (giftRegistryId != null) {
                 UI.getCurrent().navigate(NewGiftView.class, giftRegistryId.toString());
@@ -38,12 +36,19 @@ public class GiftRegistryView extends VerticalLayout implements HasUrlParameter<
                         5000, Notification.Position.BOTTOM_START);
             }
         });
-        add(addGiftButton);
 
-        add(grid);
+        // Grid columns
+        grid.setColumns("name", "price", "state", "person", "url");
+
+        // Click event on grid
+        grid.addItemClickListener(event -> {
+            Gift selectedGift = event.getItem();
+            UI.getCurrent().navigate("edit-gift/" + selectedGift.getId() + "/" + giftRegistryId);
+        });
+
+        add(addGiftButton, grid);
+
         //refreshGrid();
-
-
 
         // Back link
         RouterLink backLink = new RouterLink("Volver", GiftRegistriesView.class);
@@ -52,11 +57,13 @@ public class GiftRegistryView extends VerticalLayout implements HasUrlParameter<
 
     @Override
     public void setParameter(BeforeEvent event, String parameter) {
-        giftRegistryId = UUID.fromString(parameter);
-        Notification.show("ID recogido: " + giftRegistryId,
-                5000, Notification.Position.BOTTOM_START);
-
+        UUID giftRegistryId = UUID.fromString(parameter);
+        setGiftRegistryId(giftRegistryId);
         refreshGrid();
+    }
+
+    public void setGiftRegistryId(UUID id){
+        giftRegistryId = id;
     }
 
     private void refreshGrid() {

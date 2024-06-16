@@ -39,6 +39,10 @@ public class Gift {
         this.person = person;
     }
 
+    public UUID getId() { return id; }
+
+    public void setId(UUID id) { this.id = id; }
+
     public String getName() {
         return name;
     }

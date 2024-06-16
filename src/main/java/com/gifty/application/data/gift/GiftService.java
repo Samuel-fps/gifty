@@ -8,6 +8,9 @@ import jakarta.persistence.EntityNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Optional;
+import java.util.UUID;
+
 @Service
 public class GiftService {
 
@@ -18,5 +21,10 @@ public class GiftService {
     }
 
     public void save(Gift gift){ giftRepository.save(gift); }
+
+    public Gift getGiftById(UUID id){
+        Optional<Gift> giftOptional= giftRepository.findById(id);
+        return giftOptional.orElse(null);
+    }
 
 }
