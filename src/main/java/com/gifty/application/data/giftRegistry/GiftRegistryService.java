@@ -4,6 +4,7 @@ import com.gifty.application.data.gift.Gift;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 @Service
@@ -27,10 +28,9 @@ public class GiftRegistryService {
         return giftRegistryRepository.findGiftRegistryById(id);
     }
 
-    public GiftRegistry addGift(GiftRegistry giftRegistry, Gift gift){
+    public void addGift(GiftRegistry giftRegistry, Gift gift){
         giftRegistry.getGifts().add(gift);
         giftRegistry.setTotalPrice(giftRegistry.getTotalPrice().add(gift.getPrice()));
         giftRegistryRepository.save(giftRegistry);
-        return giftRegistry;
     }
 }

@@ -60,11 +60,11 @@ public class NewGiftView extends FlexLayout implements HasUrlParameter<String> {
             } else {
                 Gift newGift = new Gift(nameField.getValue(), urlField.getValue(), priceField.getValue(),
                         State.POR_COMPRAR, personComboBox.getValue());
-                giftregistryService.addGift(giftRegistry, newGift);
                 giftService.save(newGift);
+                giftregistryService.addGift(giftRegistry, newGift);
                 Notification.show("Regalo añadido a " + giftRegistry.getName(),
                         5000, Notification.Position.TOP_CENTER);
-                UI.getCurrent().navigate(NewGiftView.class, giftRegistry.getId().toString());
+                UI.getCurrent().navigate(GiftRegistryView.class, giftRegistry.getId().toString());
             }
         });
 
