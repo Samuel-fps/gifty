@@ -25,7 +25,8 @@ public class GiftRegistryService {
     }
 
     public GiftRegistry getGiftRegistryById(UUID id){
-        return giftRegistryRepository.findGiftRegistryById(id);
+        Optional<GiftRegistry> giftOptional= giftRegistryRepository.findById(id);
+        return giftOptional.orElse(null);
     }
 
     public void addGift(GiftRegistry giftRegistry, Gift gift){
