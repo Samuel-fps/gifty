@@ -46,7 +46,7 @@ public class GiftRegistryView extends VerticalLayout implements HasUrlParameter<
         grid.addItemClickListener(event -> {
             Gift selectedGift = event.getItem();
             if (selectedGift != null) {
-                UI.getCurrent().navigate("edit-gift/" + selectedGift.getId() + "/" + giftRegistryId.toString());
+                UI.getCurrent().navigate(GiftDetailsView.class, "?giftId=" + selectedGift.getId().toString() + "&giftRegistryId=" + giftRegistryId.toString());
             } else {
                 Notification.show(MessageUtil.getMessage("error.nameEmpty"), 5000, Notification.Position.TOP_CENTER)
                             .addThemeVariants(NotificationVariant.LUMO_ERROR);

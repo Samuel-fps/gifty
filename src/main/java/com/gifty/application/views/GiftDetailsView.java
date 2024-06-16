@@ -16,15 +16,15 @@ import com.vaadin.flow.component.notification.NotificationVariant;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.BigDecimalField;
 import com.vaadin.flow.component.textfield.TextField;
-import com.vaadin.flow.router.BeforeEvent;
-import com.vaadin.flow.router.HasUrlParameter;
-import com.vaadin.flow.router.Route;
+import com.vaadin.flow.router.*;
 import jakarta.annotation.security.PermitAll;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
-@Route(value = "edit-gift/:giftId/:giftRegistryId?", layout = MainLayout.class)
+@Route(value = "edit-gift", layout = MainLayout.class)
 @PermitAll
 public class GiftDetailsView extends VerticalLayout implements HasUrlParameter<String> {
 
@@ -45,10 +45,10 @@ public class GiftDetailsView extends VerticalLayout implements HasUrlParameter<S
         this.personService = personService;
         this.giftRegistryService = giftRegistryService;
 
-        // Div para contener el formulario con estilos de CSS
+        // Styles form
         Div contentDiv = new Div();
-        contentDiv.setWidth("400px"); // Ancho máximo del formulario
-        contentDiv.getStyle().set("margin", "0 auto"); // Centrar horizontalmente
+        contentDiv.setWidth("400px");
+        contentDiv.getStyle().set("margin", "0 auto"); 
 
         // Formulario para editar un regalo existente
         FormLayout formLayout = new FormLayout();
@@ -71,10 +71,11 @@ public class GiftDetailsView extends VerticalLayout implements HasUrlParameter<S
 
                 giftService.save(gift);
 
-                Notification.show("Regalo actualizado", 3000, Notification.Position.TOP_CENTER);
+                Notification.show("Regalo actualizado", 3000, Notification.Position.TOP_CENTER)
+                        .addThemeVariants(NotificationVariant.LUMO_SUCCESS);
                 UI.getCurrent().navigate(GiftRegistryView.class, giftRegistry.getId().toString());
             } else {
-                Notification.show("No se pudo guardar el regalo", 3000, Notification.Position.BOTTOM_START)
+                Notification.show("No se pudo guardar el regalo", 3000, Notification.Position.TOP_CENTER)
                             .addThemeVariants(NotificationVariant.LUMO_ERROR);
             }
 
@@ -85,15 +86,56 @@ public class GiftDetailsView extends VerticalLayout implements HasUrlParameter<S
 
         // Configurar el FormLayout para una sola columna
         formLayout.setResponsiveSteps(
-                new FormLayout.ResponsiveStep("0", 1) // 1 columna cuando el ancho es 0px o más
+                new FormLayout.ResponsiveStep("0", 1)
         );
 
         contentDiv.add(formLayout);
         add(contentDiv);
     }
 
+    public void setGiftRegistry(UUID id){
+        giftRegistry = giftRegistryService.getGiftRegistryById(id);
+    }
+
+    public void setGift(UUID id){
+        gift = giftService.getGiftById(id);
+    }
+
+    private void cancelEdit() {
+        if (giftRegistry != null) {
+            UI.getCurrent().navigate(GiftRegistryView.class, giftRegistry.getId().toString());
+        } else {
+            UI.getCurrent().navigate(GiftRegistriesView.class);
+        }
+    }
+
     @Override
-    public void setParameter(BeforeEvent event, String parameter) {
+    public void setParameter(BeforeEvent event,  @OptionalParameter String parameter) {
+        Location location = event.getLocation();
+        QueryParameters queryParameters = location.getQueryParameters();
+
+        Map<String, List<String>> parametersMap = queryParameters.getParameters();
+
+        UUID giftId = UUID.fromString(parametersMap.get("giftId").getFirst());
+        UUID giftRegistryId = UUID.fromString(parametersMap.get("giftRegistryId").getFirst());
+
+        //Notification.show("datos recibidos " + giftId + " y " + giftRegistryId, 5000, Notification.Position.TOP_CENTER);
+        //UI.getCurrent().navigate(GiftRegistryView.class, giftRegistryId.toString());
+
+        setGiftRegistry(giftRegistryId);
+        setGift(giftId);
+
+        if (gift != null) {
+            nameField.setValue(gift.getName());
+            urlField.setValue(gift.getUrl());
+            priceField.setValue(gift.getPrice());
+            personComboBox.setValue(gift.getPerson());
+        } else {
+            Notification.show("El regalo no existe", 5000, Notification.Position.TOP_CENTER);
+            // Redirigir a la vista de registros de regalos con el ID del registro de regalos
+            UI.getCurrent().navigate(GiftRegistryView.class, giftRegistryId.toString());
+        }
+        /*
         if (parameter != null) {
             // Obtener el ID del regalo y del giftRegistry
             String[] params = parameter.split("/");
@@ -123,23 +165,7 @@ public class GiftDetailsView extends VerticalLayout implements HasUrlParameter<S
             // Manejo de error si no se proporciona un parámetro válido
             Notification.show("ID del regalo no válido", 5000, Notification.Position.TOP_CENTER);
             UI.getCurrent().navigate(GiftRegistryView.class);
-        }
-    }
-
-    public void setGiftRegistry(UUID id){
-        giftRegistry = giftRegistryService.getGiftRegistryById(id);
-    }
-
-    public void setGift(UUID id){
-        gift = giftService.getGiftById(id);
-    }
-
-    private void cancelEdit() {
-        if (giftRegistry != null) {
-            UI.getCurrent().navigate(GiftRegistryView.class, giftRegistry.getId().toString());
-        } else {
-            UI.getCurrent().navigate(GiftRegistriesView.class);
-        }
+        }*/
     }
 }
 
