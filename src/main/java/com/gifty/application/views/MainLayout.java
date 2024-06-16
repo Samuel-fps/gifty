@@ -1,5 +1,6 @@
 package com.gifty.application.views;
 
+import com.gifty.application.config.MessageUtil;
 import com.gifty.application.security.SecurityService;
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.applayout.AppLayout;
@@ -35,7 +36,6 @@ import java.util.Locale;
 public class MainLayout extends AppLayout {
 
     private final SecurityService securityService;
-    private final MessageSource messageSource;
 
     public static class MenuItemInfo extends ListItem {
 
@@ -68,7 +68,6 @@ public class MainLayout extends AppLayout {
 
     public MainLayout(SecurityService securityService, @Autowired MessageSource messageSource) {
         this.securityService = securityService;
-        this.messageSource = messageSource;
         addToNavbar(createHeaderContent());
     }
 
@@ -85,7 +84,7 @@ public class MainLayout extends AppLayout {
         layout.add(appName);
 
         if (securityService.getAuthenticatedUser() != null) {
-            Button logout = new Button("Logout " + securityService.getAuthenticatedUser().getUsername(), click ->
+            Button logout = new Button(MessageUtil.getMessage("menu.logout"), click ->
                     securityService.logout());
             layout.add(logout);
         }
@@ -109,13 +108,13 @@ public class MainLayout extends AppLayout {
 
     private MenuItemInfo[] createMenuItems() {
         return new MenuItemInfo[]{ //
-                new MenuItemInfo(messageSource.getMessage("menu.registry", null, Locale.getDefault()), LineAwesomeIcon.GLOBE_SOLID.create(), MainView.class), //
+                new MenuItemInfo(MessageUtil.getMessage("menu.registry"), LineAwesomeIcon.GLOBE_SOLID.create(), MainView.class), //
 
                 //new MenuItemInfo(messageSource.getMessage("menu.registry", null, Locale.getDefault()), LineAwesomeIcon.USER.create(), ), //
 
-                new MenuItemInfo(messageSource.getMessage("menu.people", null, Locale.getDefault()), LineAwesomeIcon.TH_SOLID.create(), PersonGridView.class), //
+                new MenuItemInfo(MessageUtil.getMessage("menu.people"), LineAwesomeIcon.TH_SOLID.create(), PersonGridView.class), //
 
-                new MenuItemInfo(messageSource.getMessage("menu.registry", null, Locale.getDefault()), LineAwesomeIcon.TH_LIST_SOLID.create(), GiftRegistriesView.class), //
+                new MenuItemInfo(MessageUtil.getMessage("menu.registry"), LineAwesomeIcon.TH_LIST_SOLID.create(), GiftRegistriesView.class), //
         };
     }
 

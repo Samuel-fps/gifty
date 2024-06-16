@@ -1,5 +1,6 @@
 package com.gifty.application.views;
 
+import com.gifty.application.config.MessageUtil;
 import com.gifty.application.data.giftRegistry.GiftRegistry;
 import com.gifty.application.data.giftRegistry.GiftRegistryRepository;
 import com.gifty.application.data.giftRegistry.State;
@@ -10,6 +11,7 @@ import com.vaadin.flow.component.combobox.ComboBox;
 import com.vaadin.flow.component.grid.Grid;
 
 import com.vaadin.flow.component.notification.Notification;
+import com.vaadin.flow.component.orderedlayout.FlexComponent;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.TextField;
@@ -32,39 +34,35 @@ public class GiftRegistriesView extends VerticalLayout {
 
     private final GiftRegistryRepository giftRegistryRepository;
     private final UserService userService;
-    private final MessageSource messageSource;
     private final ListDataProvider<GiftRegistry> dataProvider;
 
     @Autowired
     public GiftRegistriesView(GiftRegistryRepository giftRegistryRepository, UserService userService, MessageSource messageSource) {
         this.giftRegistryRepository = giftRegistryRepository;
         this.userService = userService;
-        this.messageSource = messageSource;
 
         List<GiftRegistry> registries = giftRegistryRepository.findAllByUser(userService.getAuthenticatedUser());
         dataProvider = new ListDataProvider<>(registries);
 
         var grid = new Grid<>(GiftRegistry.class);
-        // Formulario de entrada
-        TextField newNameField = new TextField("Name");
 
-
-        Button addButton = new Button("Add");
+        // New GiftRegistry form
+        TextField newNameField = new TextField(MessageUtil.getMessage("grid.form.newRegistryGift"));
+        Button addButton = new Button(MessageUtil.getMessage("button.addButton"));
 
         addButton.addClickListener(e -> {
             String name = newNameField.getValue().trim();
             if (name.isEmpty()) {
                 newNameField.setInvalid(true);
-                newNameField.setErrorMessage("Name cannot be empty");
+                newNameField.setErrorMessage(MessageUtil.getMessage("error.emptyError"));
             } else {
-                // Crear un nuevo objeto GiftRegistry
+                // New GiftRegistry
                 GiftRegistry newRegistry = new GiftRegistry();
                 newRegistry.setName(name);
                 newRegistry.setTotalPrice(BigDecimal.ZERO);
                 newRegistry.setState(State.PENDIENTE);
                 newRegistry.setUser(userService.getAuthenticatedUser());
 
-                // Guardar en el repositorio
                 giftRegistryRepository.save(newRegistry);
 
                 // Actualizar el Grid
@@ -75,9 +73,6 @@ public class GiftRegistriesView extends VerticalLayout {
         });
 
         grid.removeAllColumns();
-
-        // Agregar columna para el precio total
-        grid.addColumn(GiftRegistry::getId).setHeader("ID");
 
         // Agregar columna para el nombre editable
         grid.addColumn(new ComponentRenderer<>(person -> {
@@ -93,11 +88,11 @@ public class GiftRegistriesView extends VerticalLayout {
             });
 
             nameField.addFocusListener(event -> {
-                nameField.setReadOnly(false); // Al hacer clic en el campo, habilitar la edición
+                nameField.setReadOnly(false);
             });
 
             return nameField;
-        })).setHeader("Name");
+        })).setHeader(MessageUtil.getMessage("grid.name"));
 
         // Agregar columna para el estado con ComboBox
         grid.addColumn(new ComponentRenderer<>(person -> {
@@ -112,14 +107,14 @@ public class GiftRegistriesView extends VerticalLayout {
             });
 
             return stateComboBox;
-        })).setHeader("State");
+        })).setHeader(MessageUtil.getMessage("grid.state"));
 
         // Agregar columna para el precio total
-        grid.addColumn(GiftRegistry::getTotalPrice).setHeader("Total Price");
+        grid.addColumn(GiftRegistry::getTotalPrice).setHeader(MessageUtil.getMessage("grid.totalPrice"));
 
         // Agregar columna para el botón de eliminar
         grid.addComponentColumn(person -> {
-            Button deleteButton = new Button("Delete");
+            Button deleteButton = new Button(MessageUtil.getMessage("button.deleteButton"));
             deleteButton.addClickListener(e -> {
                 giftRegistryRepository.delete(person);
                 dataProvider.getItems().remove(person);
@@ -128,23 +123,24 @@ public class GiftRegistriesView extends VerticalLayout {
             return deleteButton;
         }).setHeader("Actions");
 
-        //grid.setColumns("totalPrice", "state");
         grid.setDataProvider(dataProvider);
 
         grid.addItemClickListener(event -> {
-            // Obtener el elemento de la fila clicada
             GiftRegistry selectedList = event.getItem();
 
             if (selectedList != null && selectedList.getId() != null) {
                 // Navegar a la vista de detalle (DetailView) con los parámetros
                 UI.getCurrent().navigate(GiftRegistryView.class, selectedList.getId().toString());
             } else {
-                Notification.show("La lista seleccionada no existe, actualiza la página",
-                        3000, Notification.Position.BOTTOM_START);
+                Notification.show(MessageUtil.getMessage("notification.listNotExist"),
+                        3000, Notification.Position.TOP_CENTER);
             }
         });
 
-        HorizontalLayout formLayout = new HorizontalLayout(newNameField, addButton);
+        HorizontalLayout formLayout = new HorizontalLayout();
+        formLayout.setDefaultVerticalComponentAlignment(FlexComponent.Alignment.BASELINE);
+        formLayout.add(newNameField, addButton);
+        formLayout.setSpacing(false);
         add(formLayout, grid);
     }
 
