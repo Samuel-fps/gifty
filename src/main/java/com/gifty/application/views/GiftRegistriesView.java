@@ -140,7 +140,8 @@ public class GiftRegistriesView extends VerticalLayout {
         // Title
         H1 viewTitle = new H1(MessageUtil.getMessage("title.giftRegistry"));
         HorizontalLayout titleLayout = new HorizontalLayout();
-        titleLayout.setVerticalComponentAlignment(Alignment.CENTER);
+        titleLayout.setVerticalComponentAlignment(FlexComponent.Alignment.CENTER);
+        titleLayout.setJustifyContentMode(FlexComponent.JustifyContentMode.CENTER);
         titleLayout.setWidthFull();
         titleLayout.add(viewTitle);
 
