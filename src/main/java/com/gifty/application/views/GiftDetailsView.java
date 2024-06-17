@@ -1,5 +1,6 @@
 package com.gifty.application.views;
 
+import com.gifty.application.config.MessageUtil;
 import com.gifty.application.data.gift.Gift;
 import com.gifty.application.data.gift.GiftService;
 import com.gifty.application.data.giftRegistry.GiftRegistry;
@@ -18,10 +19,7 @@ import com.vaadin.flow.component.textfield.BigDecimalField;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.router.*;
 import jakarta.annotation.security.PermitAll;
-import org.springframework.beans.factory.annotation.Autowired;
 
-import java.util.List;
-import java.util.Map;
 import java.util.UUID;
 
 @Route(value = "edit-gift", layout = MainLayout.class)
@@ -30,19 +28,17 @@ public class GiftDetailsView extends VerticalLayout implements HasUrlParameter<S
 
     private final GiftService giftService;
     private final GiftRegistryService giftRegistryService;
-    private final PersonService personService;
     private Gift gift;
     private GiftRegistry giftRegistry;
 
-    // Componentes del formulario
-    private TextField nameField;
-    private TextField urlField;
-    private BigDecimalField priceField;
-    private ComboBox<Person> personComboBox;
+    // Form components
+    private final TextField nameField;
+    private final TextField urlField;
+    private final BigDecimalField priceField;
+    private final ComboBox<Person> personComboBox;
 
     public GiftDetailsView(GiftService giftService, PersonService personService, GiftRegistryService giftRegistryService) {
         this.giftService = giftService;
-        this.personService = personService;
         this.giftRegistryService = giftRegistryService;
 
         // Styles form
@@ -50,19 +46,19 @@ public class GiftDetailsView extends VerticalLayout implements HasUrlParameter<S
         contentDiv.setWidth("400px");
         contentDiv.getStyle().set("margin", "0 auto");
 
-        // Formulario para editar un regalo existente
+        // edit form
         FormLayout formLayout = new FormLayout();
 
-        nameField = new TextField("Nombre");
-        urlField = new TextField("URL");
-        priceField = new BigDecimalField("Precio");
+        nameField = new TextField(MessageUtil.getMessage("text.formName"));
+        urlField = new TextField(MessageUtil.getMessage("text.formUrl"));
+        priceField = new BigDecimalField(MessageUtil.getMessage("text.price"));
         priceField.setSuffixComponent((new Div("€")));
 
-        personComboBox = new ComboBox<>("Persona");
+        personComboBox = new ComboBox<>(MessageUtil.getMessage("text.formPerson"));
         personComboBox.setItems(personService.getAllPersons());
         personComboBox.setItemLabelGenerator(Person::getName);
 
-        Button saveButton = new Button("Guardar", e -> {
+        Button saveButton = new Button(MessageUtil.getMessage("button.save"), e -> {
             if (gift != null) {
                 gift.setName(nameField.getValue());
                 gift.setUrl(urlField.getValue());
@@ -71,20 +67,37 @@ public class GiftDetailsView extends VerticalLayout implements HasUrlParameter<S
 
                 giftService.save(gift);
 
-                Notification.show("Regalo actualizado", 3000, Notification.Position.TOP_CENTER)
+                Notification.show(MessageUtil.getMessage("notification.updatedGift"), 3000, Notification.Position.TOP_CENTER)
                         .addThemeVariants(NotificationVariant.LUMO_SUCCESS);
                 UI.getCurrent().navigate(GiftRegistryView.class, giftRegistry.getId().toString());
             } else {
-                Notification.show("No se pudo guardar el regalo", 3000, Notification.Position.TOP_CENTER)
+                Notification.show(MessageUtil.getMessage("notification.errorSaveGift"), 3000, Notification.Position.TOP_CENTER)
                             .addThemeVariants(NotificationVariant.LUMO_ERROR);
             }
-
         });
-        Button cancelButton = new Button("Cancelar", e -> cancelEdit());
+        saveButton.getStyle().set("background-color", "green");
+        saveButton.getStyle().set("color", "white");
 
-        formLayout.add(nameField, urlField, priceField, personComboBox, saveButton, cancelButton);
+        Button deleteButton = new Button(MessageUtil.getMessage("button.delete"), e -> {
+            if (gift != null) {
+                giftService.delete(gift, giftRegistry);
+                Notification.show(MessageUtil.getMessage("notification.deletedGift"), 3000, Notification.Position.TOP_CENTER)
+                        .addThemeVariants(NotificationVariant.LUMO_ERROR);
+                UI.getCurrent().navigate(GiftRegistryView.class, giftRegistry.getId().toString());
+            } else {
+                Notification.show(MessageUtil.getMessage("notification.errorNotExitGift"), 3000, Notification.Position.TOP_CENTER)
+                        .addThemeVariants(NotificationVariant.LUMO_ERROR);
+            }
+        });
+        deleteButton.getStyle().set("background-color", "#B60000");
+        deleteButton.getStyle().set("color", "white");
 
-        // Configurar el FormLayout para una sola columna
+
+        Button cancelButton = new Button(MessageUtil.getMessage("button.cancel"), e -> cancelEdit());
+
+        formLayout.add(nameField, urlField, priceField, personComboBox, saveButton, deleteButton, cancelButton);
+
+        // One column
         formLayout.setResponsiveSteps(
                 new FormLayout.ResponsiveStep("0", 1)
         );
@@ -123,8 +136,7 @@ public class GiftDetailsView extends VerticalLayout implements HasUrlParameter<S
             priceField.setValue(gift.getPrice());
             personComboBox.setValue(gift.getPerson());
         } else {
-            Notification.show("El regalo no existe", 5000, Notification.Position.TOP_CENTER);
-            // Redirigir a la vista de registros de regalos con el ID del registro de regalos
+            Notification.show(MessageUtil.getMessage("notification.errorNotExitGift"), 5000, Notification.Position.TOP_CENTER);
             UI.getCurrent().navigate(GiftRegistryView.class, giftRegistryId.toString());
         }
     }

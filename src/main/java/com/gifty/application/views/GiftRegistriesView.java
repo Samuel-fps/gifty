@@ -121,7 +121,7 @@ public class GiftRegistriesView extends VerticalLayout {
                 dataProvider.refreshAll();
             });
             return deleteButton;
-        }).setHeader("Actions");
+        }).setHeader("");
 
         grid.setDataProvider(dataProvider);
 
@@ -140,7 +140,7 @@ public class GiftRegistriesView extends VerticalLayout {
         HorizontalLayout formLayout = new HorizontalLayout();
         formLayout.setDefaultVerticalComponentAlignment(FlexComponent.Alignment.BASELINE);
         formLayout.add(newNameField, addButton);
-        formLayout.setSpacing(false);
+
         add(formLayout, grid);
     }
 

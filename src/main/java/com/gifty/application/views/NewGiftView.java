@@ -67,7 +67,7 @@ public class NewGiftView extends FlexLayout implements HasUrlParameter<String> {
                 giftService.save(newGift);
                 giftregistryService.addGift(giftRegistry, newGift);
 
-                Notification.show(MessageUtil.getMessage("notification.addedGift") + giftRegistry.getName(),
+                Notification.show(MessageUtil.getMessage("notification.addedGift") + " " + giftRegistry.getName(),
                                 5000, Notification.Position.TOP_CENTER)
                             .addThemeVariants(NotificationVariant.LUMO_SUCCESS);
                 UI.getCurrent().navigate(GiftRegistryView.class, giftRegistry.getId().toString());

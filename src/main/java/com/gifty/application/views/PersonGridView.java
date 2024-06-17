@@ -2,6 +2,7 @@ package com.gifty.application.views;
 
 
 
+import com.gifty.application.config.MessageUtil;
 import com.gifty.application.data.person.Person;
 import com.gifty.application.data.person.PersonService;
 import com.gifty.application.data.user.UserService;
@@ -11,6 +12,9 @@ import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.notification.NotificationVariant;
+import com.vaadin.flow.component.orderedlayout.FlexComponent;
+import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
+import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.data.renderer.ComponentRenderer;
 import com.vaadin.flow.data.renderer.TextRenderer;
@@ -20,13 +24,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 @Route(value = "people", layout = MainLayout.class)
 @PermitAll
-public class PersonGridView extends Div {
+public class PersonGridView extends VerticalLayout {
 
     private final SecurityService securityService;
     private final PersonService personService;
     private final UserService userService;
     private final Grid<Person> grid;
-    private final TextField nameField;
+    private final TextField newNameField;
     private final Button saveButton;
 
     @Autowired
@@ -35,20 +39,20 @@ public class PersonGridView extends Div {
         this.personService = personService;
         this.userService = userService;
         this.grid = new Grid<>(Person.class);
-        this.nameField = new TextField("Name");
-        this.saveButton = new Button("Save");
+        this.newNameField = new TextField(MessageUtil.getMessage("text.formName"));
+        this.saveButton = new Button(MessageUtil.getMessage("button.save"));
 
         saveButton.addClickListener(e -> {
-            String newName = nameField.getValue();
+            String newName = newNameField.getValue();
             if (newName.isEmpty()) {
-                Notification notification = Notification.show("Name cant be emty");
+                Notification notification = Notification.show(MessageUtil.getMessage("error.nameEmpty"));
                 notification.addThemeVariants(NotificationVariant.LUMO_ERROR);
                 return;
             }
             Person person = new Person(newName);
             personService.addPersonToUser(person);
             refreshGrid();
-            nameField.clear();
+            newNameField.clear();
         });
 
         grid.removeAllColumns();
@@ -64,11 +68,11 @@ public class PersonGridView extends Div {
                 person.setName(newName);
                 personService.save(person);
                 refreshGrid();
-                nameField.setReadOnly(true); // Después de editar, volver a establecer el campo de texto como de solo lectura
+                nameField.setReadOnly(true);
             });
 
             nameField.addFocusListener(event -> {
-                nameField.setReadOnly(false); // Al hacer clic en el campo, habilitar la edición
+                nameField.setReadOnly(false);
             });
 
             return nameField;
@@ -77,15 +81,19 @@ public class PersonGridView extends Div {
 
         // Agregar columna para el botón de eliminar
         grid.addComponentColumn(person -> {
-            Button deleteButton = new Button("Delete");
+            Button deleteButton = new Button(MessageUtil.getMessage("button.delete"));
             deleteButton.addClickListener(e -> {
                 personService.delete(person);
                 refreshGrid();
             });
             return deleteButton;
-        }).setHeader("Actions");
+        }).setHeader("");
 
-        add(nameField, saveButton, grid);
+        HorizontalLayout formLayout = new HorizontalLayout();
+        formLayout.setDefaultVerticalComponentAlignment(FlexComponent.Alignment.BASELINE);
+        formLayout.add(newNameField, saveButton);
+
+        add(formLayout, grid);
         refreshGrid();
     }
 
