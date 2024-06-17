@@ -39,15 +39,20 @@ public class GiftRegistryView extends VerticalLayout implements HasUrlParameter<
             }
         });
 
+        grid.removeAllColumns();
+
         // Grid columns
-        grid.setColumns("name", "price", "state", "url");
-        grid.addColumn(gift -> gift.getPerson().getName()).setHeader("Person");
+        grid.addColumn(Gift::getName).setHeader(MessageUtil.getMessage("grid.name"));
+        grid.addColumn(Gift::getPrice).setHeader(MessageUtil.getMessage("grid.price"));
+        grid.addColumn(Gift::getState).setHeader(MessageUtil.getMessage("grid.state"));
+        grid.addColumn(Gift::getUrl).setHeader(MessageUtil.getMessage("grid.url"));
+        grid.addColumn(gift -> gift.getPerson().getName()).setHeader(MessageUtil.getMessage("grid.person"));
 
         // Click event on grid
         grid.addItemClickListener(event -> {
             Gift selectedGift = event.getItem();
             if (selectedGift != null) {
-                UI.getCurrent().navigate(GiftDetailsView.class, "?giftId=" + selectedGift.getId().toString() + "&giftRegistryId=" + giftRegistryId.toString());
+                UI.getCurrent().navigate(GiftDetailsView.class, selectedGift.getId().toString() + "/" + giftRegistryId.toString());
             } else {
                 Notification.show(MessageUtil.getMessage("error.nameEmpty"), 5000, Notification.Position.TOP_CENTER)
                             .addThemeVariants(NotificationVariant.LUMO_ERROR);

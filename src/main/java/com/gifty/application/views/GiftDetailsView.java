@@ -110,17 +110,9 @@ public class GiftDetailsView extends VerticalLayout implements HasUrlParameter<S
     }
 
     @Override
-    public void setParameter(BeforeEvent event,  @OptionalParameter String parameter) {
-        Location location = event.getLocation();
-        QueryParameters queryParameters = location.getQueryParameters();
-
-        Map<String, List<String>> parametersMap = queryParameters.getParameters();
-
-        UUID giftId = UUID.fromString(parametersMap.get("giftId").getFirst());
-        UUID giftRegistryId = UUID.fromString(parametersMap.get("giftRegistryId").getFirst());
-
-        //Notification.show("datos recibidos " + giftId + " y " + giftRegistryId, 5000, Notification.Position.TOP_CENTER);
-        //UI.getCurrent().navigate(GiftRegistryView.class, giftRegistryId.toString());
+    public void setParameter(BeforeEvent event,  @WildcardParameter String parameters) {
+        UUID giftId = UUID.fromString(parameters.split("/")[0]);
+        UUID giftRegistryId = UUID.fromString(parameters.split("/")[1]);
 
         setGiftRegistry(giftRegistryId);
         setGift(giftId);
@@ -135,37 +127,6 @@ public class GiftDetailsView extends VerticalLayout implements HasUrlParameter<S
             // Redirigir a la vista de registros de regalos con el ID del registro de regalos
             UI.getCurrent().navigate(GiftRegistryView.class, giftRegistryId.toString());
         }
-        /*
-        if (parameter != null) {
-            // Obtener el ID del regalo y del giftRegistry
-            String[] params = parameter.split("/");
-            if (params.length == 2) {
-                UUID giftId = UUID.fromString(params[0]);
-                UUID giftRegistryId = UUID.fromString(params[1]);
-
-                setGiftRegistry(giftRegistryId);
-                setGift(giftId);
-
-                gift = giftService.getGiftById(giftId);
-                if (gift != null) {
-                    nameField.setValue(gift.getName());
-                    urlField.setValue(gift.getUrl());
-                    priceField.setValue(gift.getPrice());
-                    personComboBox.setValue(gift.getPerson());
-                } else {
-                    Notification.show("El regalo no existe", 5000, Notification.Position.TOP_CENTER);
-                    UI.getCurrent().navigate(GiftRegistryView.class, giftRegistryId.toString());
-                }
-            } else {
-                // Manejo de error si los parámetros no son válidos
-                Notification.show("Parámetros de URL inválidos " + params.length, 5000, Notification.Position.TOP_CENTER);
-                UI.getCurrent().navigate(GiftRegistryView.class);
-            }
-        } else {
-            // Manejo de error si no se proporciona un parámetro válido
-            Notification.show("ID del regalo no válido", 5000, Notification.Position.TOP_CENTER);
-            UI.getCurrent().navigate(GiftRegistryView.class);
-        }*/
     }
 }
 
