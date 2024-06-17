@@ -11,7 +11,7 @@ import com.vaadin.flow.router.RouteAlias;
 import jakarta.annotation.security.PermitAll;
 
 @PageTitle("Gifty")
-@Route(value = "", layout = MainLayout.class)
+@Route(value = "hello-world", layout = MainLayout.class)
 @PermitAll
 public class MainView extends HorizontalLayout {
 

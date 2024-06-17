@@ -68,7 +68,9 @@ public class Gift {
         this.price = price;
     }
 
-    public String getState() {
+    public State getState() {
+        return state;
+        /*
         if (state == null) {
             return "UNKNOWN";
         }
@@ -78,6 +80,8 @@ public class Gift {
             case RECIBIDO -> MessageUtil.getMessage("enum.received");
             default -> "UNKNOWN";
         };
+
+         */
     }
 
     public void setState(State state) {

@@ -6,6 +6,7 @@ import com.gifty.application.data.giftRegistry.GiftRegistryService;
 import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.grid.Grid;
+import com.vaadin.flow.component.html.H1;
 import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.notification.NotificationVariant;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
@@ -59,12 +60,14 @@ public class GiftRegistryView extends VerticalLayout implements HasUrlParameter<
             }
         });
 
-        add(addGiftButton, grid);
+        //H1 viewTitle = new H1(giftRegistryService.getGiftRegistryById(giftRegistryId).getName());
+
+        add( addGiftButton, grid);
 
         //refreshGrid();
 
         // Back link
-        RouterLink backLink = new RouterLink(MessageUtil.getMessage("link.back"), GiftRegistriesView.class);
+        RouterLink backLink = new RouterLink(MessageUtil.getMessage("link.back") + giftRegistryId, GiftRegistriesView.class);
         add(backLink);
     }
 

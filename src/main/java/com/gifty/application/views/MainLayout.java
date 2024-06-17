@@ -107,14 +107,11 @@ public class MainLayout extends AppLayout {
     }
 
     private MenuItemInfo[] createMenuItems() {
-        return new MenuItemInfo[]{ //
-                new MenuItemInfo(MessageUtil.getMessage("menu.registry"), LineAwesomeIcon.GLOBE_SOLID.create(), MainView.class), //
-
-                //new MenuItemInfo(messageSource.getMessage("menu.registry", null, Locale.getDefault()), LineAwesomeIcon.USER.create(), ), //
-
-                new MenuItemInfo(MessageUtil.getMessage("menu.people"), LineAwesomeIcon.TH_SOLID.create(), PersonGridView.class), //
-
-                new MenuItemInfo(MessageUtil.getMessage("menu.registry"), LineAwesomeIcon.TH_LIST_SOLID.create(), GiftRegistriesView.class), //
+        return new MenuItemInfo[]{
+                new MenuItemInfo(MessageUtil.getMessage("menu.registry"), LineAwesomeIcon.TH_LIST_SOLID.create(), GiftRegistriesView.class),
+                new MenuItemInfo(MessageUtil.getMessage("menu.people"), LineAwesomeIcon.TH_SOLID.create(),        PersonGridView.class),
+                new MenuItemInfo(MessageUtil.getMessage("menu.registry"), LineAwesomeIcon.GLOBE_SOLID.create(),   MainView.class),
+                //new MenuItemInfo(messageSource.getMessage("menu.registry", null, Locale.getDefault()), LineAwesomeIcon.USER.create(), ),
         };
     }
 

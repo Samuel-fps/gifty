@@ -3,6 +3,7 @@ package com.gifty.application.views;
 import com.gifty.application.config.MessageUtil;
 import com.gifty.application.data.gift.Gift;
 import com.gifty.application.data.gift.GiftService;
+import com.gifty.application.data.gift.State;
 import com.gifty.application.data.giftRegistry.GiftRegistry;
 import com.gifty.application.data.giftRegistry.GiftRegistryService;
 import com.gifty.application.data.person.Person;
@@ -36,6 +37,7 @@ public class GiftDetailsView extends VerticalLayout implements HasUrlParameter<S
     private final TextField urlField;
     private final BigDecimalField priceField;
     private final ComboBox<Person> personComboBox;
+    private final ComboBox<State> stateComboBox;
 
     public GiftDetailsView(GiftService giftService, PersonService personService, GiftRegistryService giftRegistryService) {
         this.giftService = giftService;
@@ -58,12 +60,16 @@ public class GiftDetailsView extends VerticalLayout implements HasUrlParameter<S
         personComboBox.setItems(personService.getAllPersons());
         personComboBox.setItemLabelGenerator(Person::getName);
 
+        stateComboBox = new ComboBox<>(MessageUtil.getMessage("text.formState"));
+        stateComboBox.setItems(State.values());
+
         Button saveButton = new Button(MessageUtil.getMessage("button.save"), e -> {
             if (gift != null) {
                 gift.setName(nameField.getValue());
                 gift.setUrl(urlField.getValue());
                 gift.setPrice(priceField.getValue());
                 gift.setPerson(personComboBox.getValue());
+                gift.setState(stateComboBox.getValue());
 
                 giftService.save(gift);
 
@@ -95,7 +101,7 @@ public class GiftDetailsView extends VerticalLayout implements HasUrlParameter<S
 
         Button cancelButton = new Button(MessageUtil.getMessage("button.cancel"), e -> cancelEdit());
 
-        formLayout.add(nameField, urlField, priceField, personComboBox, saveButton, deleteButton, cancelButton);
+        formLayout.add(nameField, urlField, priceField, personComboBox, stateComboBox, saveButton, deleteButton, cancelButton);
 
         // One column
         formLayout.setResponsiveSteps(
@@ -135,6 +141,7 @@ public class GiftDetailsView extends VerticalLayout implements HasUrlParameter<S
             urlField.setValue(gift.getUrl());
             priceField.setValue(gift.getPrice());
             personComboBox.setValue(gift.getPerson());
+            stateComboBox.setValue(gift.getState());
         } else {
             Notification.show(MessageUtil.getMessage("notification.errorNotExitGift"), 5000, Notification.Position.TOP_CENTER);
             UI.getCurrent().navigate(GiftRegistryView.class, giftRegistryId.toString());

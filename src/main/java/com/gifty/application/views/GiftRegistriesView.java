@@ -10,6 +10,7 @@ import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.combobox.ComboBox;
 import com.vaadin.flow.component.grid.Grid;
 
+import com.vaadin.flow.component.html.H1;
 import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.orderedlayout.FlexComponent;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
@@ -28,7 +29,7 @@ import java.math.BigDecimal;
 import java.util.List;
 
 @PageTitle("Gifty")
-@Route(value = "gift-registries", layout = MainLayout.class)
+@Route(value = "", layout = MainLayout.class)
 @PermitAll
 public class GiftRegistriesView extends VerticalLayout {
 
@@ -129,7 +130,6 @@ public class GiftRegistriesView extends VerticalLayout {
             GiftRegistry selectedList = event.getItem();
 
             if (selectedList != null && selectedList.getId() != null) {
-                // Navegar a la vista de detalle (DetailView) con los parámetros
                 UI.getCurrent().navigate(GiftRegistryView.class, selectedList.getId().toString());
             } else {
                 Notification.show(MessageUtil.getMessage("notification.listNotExist"),
@@ -137,11 +137,19 @@ public class GiftRegistriesView extends VerticalLayout {
             }
         });
 
+        // Title
+        H1 viewTitle = new H1(MessageUtil.getMessage("title.giftRegistry"));
+        HorizontalLayout titleLayout = new HorizontalLayout();
+        titleLayout.setVerticalComponentAlignment(Alignment.CENTER);
+        titleLayout.setWidthFull();
+        titleLayout.add(viewTitle);
+
+        // Add button
         HorizontalLayout formLayout = new HorizontalLayout();
         formLayout.setDefaultVerticalComponentAlignment(FlexComponent.Alignment.BASELINE);
         formLayout.add(newNameField, addButton);
 
-        add(formLayout, grid);
+        add(titleLayout, formLayout, grid);
     }
 
     private void refreshGrid() {
