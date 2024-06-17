@@ -5,6 +5,7 @@ import com.gifty.application.data.gift.Gift;
 import com.gifty.application.data.giftRegistry.GiftRegistryService;
 import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.button.Button;
+import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.html.H1;
 import com.vaadin.flow.component.notification.Notification;
@@ -39,6 +40,7 @@ public class GiftRegistryView extends VerticalLayout implements HasUrlParameter<
                             .addThemeVariants(NotificationVariant.LUMO_ERROR);
             }
         });
+        addGiftButton.addThemeVariants(ButtonVariant.LUMO_SUCCESS);
 
         grid.removeAllColumns();
 
@@ -62,13 +64,11 @@ public class GiftRegistryView extends VerticalLayout implements HasUrlParameter<
 
         //H1 viewTitle = new H1(giftRegistryService.getGiftRegistryById(giftRegistryId).getName());
 
+        setSizeFull();
+        grid.setHeightFull();
+
         add( addGiftButton, grid);
 
-        //refreshGrid();
-
-        // Back link
-        RouterLink backLink = new RouterLink(MessageUtil.getMessage("link.back") + giftRegistryId, GiftRegistriesView.class);
-        add(backLink);
     }
 
     @Override

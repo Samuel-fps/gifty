@@ -7,6 +7,7 @@ import com.gifty.application.data.giftRegistry.State;
 import com.gifty.application.data.user.UserService;
 import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.button.Button;
+import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.combobox.ComboBox;
 import com.vaadin.flow.component.grid.Grid;
 
@@ -50,6 +51,7 @@ public class GiftRegistriesView extends VerticalLayout {
         // New GiftRegistry form
         TextField newNameField = new TextField(MessageUtil.getMessage("grid.form.newRegistryGift"));
         Button addButton = new Button(MessageUtil.getMessage("button.addButton"));
+        addButton.addThemeVariants(ButtonVariant.LUMO_SUCCESS);
 
         addButton.addClickListener(e -> {
             String name = newNameField.getValue().trim();
@@ -110,12 +112,13 @@ public class GiftRegistriesView extends VerticalLayout {
             return stateComboBox;
         })).setHeader(MessageUtil.getMessage("grid.state"));
 
-        // Agregar columna para el precio total
+        // Total price
         grid.addColumn(GiftRegistry::getTotalPrice).setHeader(MessageUtil.getMessage("grid.totalPrice"));
 
-        // Agregar columna para el botón de eliminar
+        // Delete button
         grid.addComponentColumn(person -> {
             Button deleteButton = new Button(MessageUtil.getMessage("button.deleteButton"));
+            deleteButton.addThemeVariants(ButtonVariant.LUMO_ERROR);
             deleteButton.addClickListener(e -> {
                 giftRegistryRepository.delete(person);
                 dataProvider.getItems().remove(person);
@@ -149,6 +152,9 @@ public class GiftRegistriesView extends VerticalLayout {
         HorizontalLayout formLayout = new HorizontalLayout();
         formLayout.setDefaultVerticalComponentAlignment(FlexComponent.Alignment.BASELINE);
         formLayout.add(newNameField, addButton);
+
+        setSizeFull();
+        grid.setHeightFull();
 
         add(titleLayout, formLayout, grid);
     }

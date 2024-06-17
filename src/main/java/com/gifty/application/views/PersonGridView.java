@@ -8,6 +8,7 @@ import com.gifty.application.data.person.PersonService;
 import com.gifty.application.data.user.UserService;
 import com.gifty.application.security.SecurityService;
 import com.vaadin.flow.component.button.Button;
+import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.notification.Notification;
@@ -41,6 +42,7 @@ public class PersonGridView extends VerticalLayout {
         this.grid = new Grid<>(Person.class);
         this.newNameField = new TextField(MessageUtil.getMessage("text.formName"));
         this.saveButton = new Button(MessageUtil.getMessage("button.save"));
+        saveButton.addThemeVariants(ButtonVariant.LUMO_SUCCESS);
 
         saveButton.addClickListener(e -> {
             String newName = newNameField.getValue();
@@ -76,12 +78,12 @@ public class PersonGridView extends VerticalLayout {
             });
 
             return nameField;
-        })).setHeader("Name");
-
+        })).setHeader(MessageUtil.getMessage("grid.name"));
 
         // Agregar columna para el botón de eliminar
         grid.addComponentColumn(person -> {
             Button deleteButton = new Button(MessageUtil.getMessage("button.delete"));
+            deleteButton.addThemeVariants(ButtonVariant.LUMO_ERROR);
             deleteButton.addClickListener(e -> {
                 personService.delete(person);
                 refreshGrid();
@@ -92,6 +94,9 @@ public class PersonGridView extends VerticalLayout {
         HorizontalLayout formLayout = new HorizontalLayout();
         formLayout.setDefaultVerticalComponentAlignment(FlexComponent.Alignment.BASELINE);
         formLayout.add(newNameField, saveButton);
+
+        setSizeFull();
+        grid.setHeightFull();
 
         add(formLayout, grid);
         refreshGrid();
