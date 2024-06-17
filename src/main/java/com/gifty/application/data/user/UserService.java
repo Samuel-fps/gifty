@@ -63,4 +63,7 @@ public class UserService implements UserDetailsService {
         return userRepository.findByEmail(email);
     }
 
+    public void save(User user){
+        userRepository.save(user);
+    }
 }
