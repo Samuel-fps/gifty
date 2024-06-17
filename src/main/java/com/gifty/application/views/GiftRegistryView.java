@@ -47,9 +47,9 @@ public class GiftRegistryView extends VerticalLayout implements HasUrlParameter<
         // Grid columns
         grid.addColumn(Gift::getName).setHeader(MessageUtil.getMessage("grid.name"));
         grid.addColumn(Gift::getPrice).setHeader(MessageUtil.getMessage("grid.price"));
+        grid.addColumn(gift -> gift.getPerson().getName()).setHeader(MessageUtil.getMessage("grid.person"));
         grid.addColumn(Gift::getState).setHeader(MessageUtil.getMessage("grid.state"));
         grid.addColumn(Gift::getUrl).setHeader(MessageUtil.getMessage("grid.url"));
-        grid.addColumn(gift -> gift.getPerson().getName()).setHeader(MessageUtil.getMessage("grid.person"));
 
         // Click event on grid
         grid.addItemClickListener(event -> {
@@ -62,12 +62,10 @@ public class GiftRegistryView extends VerticalLayout implements HasUrlParameter<
             }
         });
 
-        //H1 viewTitle = new H1(giftRegistryService.getGiftRegistryById(giftRegistryId).getName());
-
         setSizeFull();
         grid.setHeightFull();
 
-        add( addGiftButton, grid);
+        add(addGiftButton, grid);
 
     }
 
