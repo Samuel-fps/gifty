@@ -11,6 +11,7 @@ import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.html.Div;
+import com.vaadin.flow.component.html.H1;
 import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.notification.NotificationVariant;
 import com.vaadin.flow.component.orderedlayout.FlexComponent;
@@ -95,10 +96,18 @@ public class PersonGridView extends VerticalLayout {
         formLayout.setDefaultVerticalComponentAlignment(FlexComponent.Alignment.BASELINE);
         formLayout.add(newNameField, saveButton);
 
+        // Title
+        H1 viewTitle = new H1(MessageUtil.getMessage("title.person"));
+        HorizontalLayout titleLayout = new HorizontalLayout();
+        titleLayout.setVerticalComponentAlignment(FlexComponent.Alignment.CENTER);
+        titleLayout.setJustifyContentMode(FlexComponent.JustifyContentMode.CENTER);
+        titleLayout.setWidthFull();
+        titleLayout.add(viewTitle);
+
         setSizeFull();
         grid.setHeightFull();
 
-        add(formLayout, grid);
+        add(titleLayout, formLayout, grid);
         refreshGrid();
     }
 
