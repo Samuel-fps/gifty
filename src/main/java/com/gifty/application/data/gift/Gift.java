@@ -1,5 +1,6 @@
 package com.gifty.application.data.gift;
 
+import com.gifty.application.config.MessageUtil;
 import com.gifty.application.data.giftRegistry.GiftRegistry;
 import com.gifty.application.data.person.Person;
 import jakarta.persistence.*;
@@ -67,8 +68,16 @@ public class Gift {
         this.price = price;
     }
 
-    public State getState() {
-        return state;
+    public String getState() {
+        if (state == null) {
+            return "UNKNOWN";
+        }
+        return switch (state) {
+            case POR_COMPRAR -> MessageUtil.getMessage("enum.toBuy");
+            case PENDIENTE_DE_RECIBIR -> MessageUtil.getMessage("enum.toReceive");
+            case RECIBIDO -> MessageUtil.getMessage("enum.received");
+            default -> "UNKNOWN";
+        };
     }
 
     public void setState(State state) {

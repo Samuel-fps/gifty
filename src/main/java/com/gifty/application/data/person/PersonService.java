@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 @Service
@@ -25,6 +26,10 @@ public class PersonService {
         this.userService = userService;
     }
 
+    public Person getPersonById(UUID id){
+        return personRepository.findById(id).orElse(null);
+    }
+
     public List<Person> getAllPersons() {
         return personRepository.findAll();
     }
@@ -37,7 +42,9 @@ public class PersonService {
         personRepository.delete(person);
     }
 
-    public void save(Person person){ personRepository.save(person); }
+    public void save(Person person){
+        personRepository.save(person);
+    }
 
     @Transactional
     public void addPersonToUser(Person person) {

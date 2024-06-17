@@ -48,7 +48,7 @@ public class GiftDetailsView extends VerticalLayout implements HasUrlParameter<S
         // Styles form
         Div contentDiv = new Div();
         contentDiv.setWidth("400px");
-        contentDiv.getStyle().set("margin", "0 auto"); 
+        contentDiv.getStyle().set("margin", "0 auto");
 
         // Formulario para editar un regalo existente
         FormLayout formLayout = new FormLayout();

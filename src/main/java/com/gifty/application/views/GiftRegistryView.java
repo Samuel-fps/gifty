@@ -40,7 +40,8 @@ public class GiftRegistryView extends VerticalLayout implements HasUrlParameter<
         });
 
         // Grid columns
-        grid.setColumns("name", "price", "state", "person", "url");
+        grid.setColumns("name", "price", "state", "url");
+        grid.addColumn(gift -> gift.getPerson().getName()).setHeader("Person");
 
         // Click event on grid
         grid.addItemClickListener(event -> {
