@@ -1,7 +1,10 @@
-package com.gifty.application.views;
+package com.gifty.application.views.layout;
 
 import com.gifty.application.config.MessageUtil;
 import com.gifty.application.security.SecurityService;
+import com.gifty.application.views.person.PersonGridView;
+import com.gifty.application.views.user.UserDetailsView;
+import com.gifty.application.views.gifRegistry.GiftRegistriesView;
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.applayout.AppLayout;
 import com.vaadin.flow.component.button.Button;
@@ -31,7 +34,6 @@ import com.vaadin.flow.theme.lumo.LumoUtility.Width;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.vaadin.lineawesome.LineAwesomeIcon;
-import java.util.Locale;
 
 public class MainLayout extends AppLayout {
 

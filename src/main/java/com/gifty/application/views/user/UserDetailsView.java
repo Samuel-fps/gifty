@@ -1,8 +1,10 @@
-package com.gifty.application.views;
+package com.gifty.application.views.user;
 
 import com.gifty.application.config.MessageUtil;
 import com.gifty.application.data.user.User;
 import com.gifty.application.data.user.UserService;
+import com.gifty.application.views.gifRegistry.GiftRegistriesView;
+import com.gifty.application.views.layout.MainLayout;
 import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.formlayout.FormLayout;

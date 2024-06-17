@@ -1,10 +1,12 @@
-package com.gifty.application.views;
+package com.gifty.application.views.gifRegistry;
 
 import com.gifty.application.config.MessageUtil;
 import com.gifty.application.data.giftRegistry.GiftRegistry;
 import com.gifty.application.data.giftRegistry.GiftRegistryRepository;
 import com.gifty.application.data.giftRegistry.State;
 import com.gifty.application.data.user.UserService;
+import com.gifty.application.views.layout.MainLayout;
+import com.gifty.application.views.gift.GiftRegistryView;
 import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;

@@ -1,13 +1,14 @@
-package com.gifty.application.views;
+package com.gifty.application.views.gift;
 
 import com.gifty.application.config.MessageUtil;
 import com.gifty.application.data.gift.Gift;
 import com.gifty.application.data.giftRegistry.GiftRegistryService;
+import com.gifty.application.views.gifRegistry.GiftRegistriesView;
+import com.gifty.application.views.layout.MainLayout;
 import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.grid.Grid;
-import com.vaadin.flow.component.html.H1;
 import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.notification.NotificationVariant;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
