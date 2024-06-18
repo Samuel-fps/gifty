@@ -21,3 +21,8 @@ error-screenshots/
 webpack.generated.js
 src/main/resources/application.properties
 *.properties
+
+# Elastic Beanstalk Files
+.elasticbeanstalk/*
+!.elasticbeanstalk/*.cfg.yml
+!.elasticbeanstalk/*.global.yml
