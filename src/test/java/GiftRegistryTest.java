@@ -1,5 +1,3 @@
-package com.gifty.application.test;
-
 import com.gifty.application.data.gift.Gift;
 import com.gifty.application.data.giftRegistry.GiftRegistry;
 import com.gifty.application.data.giftRegistry.State;
