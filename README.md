@@ -1,45 +1,39 @@
 # gifty
 
-This project can be used as a starting point to create your own Vaadin application with Spring Boot.
-It contains all the necessary configuration and some placeholder files to get you started.
 
-## Running the application
+
+Esta aplicación es un proyecto desarrollado para la asignatura de Ingeniería Web,
+en el cual se han utilizado las tecnologías Spring y Vaadin como frameworks de 
+backend y frontend, respectivamente. El proyecto consiste en una aplicación con 
+funcionalidad de registro de usuarios, y su principal objetivo es organizar la 
+compra de regalos para eventos específicos.
+
+English
+
+This application is a project developed for the Web Engineering course, in which 
+Spring and Vaadin technologies have been used as backend and frontend frameworks,
+respectively. The project is an application with user registration functionality, 
+and its main purpose is to organize the purchase of gifts for specific events.
+
+
+## Ejecutar aplicación
+
+El proyecto es un proyecto estándar de Maven. Para ejecutarlo desde la línea
+de comandos, escribe `mvnw` (Windows) o `./mvnw` (Mac y Linux), luego abre 
+http://localhost:5000 en tu navegador.
 
 The project is a standard Maven project. To run it from the command line,
 type `mvnw` (Windows), or `./mvnw` (Mac & Linux), then open
-http://localhost:8080 in your browser.
+http://localhost:5000 in your browser.
 
-You can also import the project to your IDE of choice as you would with any
-Maven project. Read more on [how to import Vaadin projects to different IDEs](https://vaadin.com/docs/latest/guide/step-by-step/importing) (Eclipse, IntelliJ IDEA, NetBeans, and VS Code).
 
-## Deploying to Production
+## Desplegar a produccion
 
-To create a production build, call `mvnw clean package -Pproduction` (Windows),
-or `./mvnw clean package -Pproduction` (Mac & Linux).
-This will build a JAR file with all the dependencies and front-end resources,
-ready to be deployed. The file can be found in the `target` folder after the build completes.
+Para crear una versión de producción, ejecuta `mvnw clean package -Pproduction`
+en Windows, o `./mvnw clean package -Pproduction` en Mac y Linux.
+Esto generará un archivo JAR con todas las dependencias y recursos front-end,
+listo para ser desplegado. El archivo estará disponible en la carpeta designada 
+una vez completada la construcción.
 
-Once the JAR file is built, you can run it using
+Una vez que el archivo JAR esté generado, puedes ejecutarlo utilizando
 `java -jar target/gifty-1.0-SNAPSHOT.jar`
-
-## Project structure
-
-- `MainLayout.java` in `src/main/java` contains the navigation setup (i.e., the
-  side/top bar and the main menu). This setup uses
-  [App Layout](https://vaadin.com/docs/components/app-layout).
-- `views` package in `src/main/java` contains the server-side Java views of your application.
-- `views` folder in `src/main/frontend` contains the client-side JavaScript views of your application.
-- `themes` folder in `src/main/frontend` contains the custom CSS styles.
-
-## Useful links
-
-- Read the documentation at [vaadin.com/docs](https://vaadin.com/docs).
-- Follow the tutorial at [vaadin.com/docs/latest/tutorial/overview](https://vaadin.com/docs/latest/tutorial/overview).
-- Create new projects at [start.vaadin.com](https://start.vaadin.com/).
-- Search UI components and their usage examples at [vaadin.com/docs/latest/components](https://vaadin.com/docs/latest/components).
-- View use case applications that demonstrate Vaadin capabilities at [vaadin.com/examples-and-demos](https://vaadin.com/examples-and-demos).
-- Build any UI without custom CSS by discovering Vaadin's set of [CSS utility classes](https://vaadin.com/docs/styling/lumo/utility-classes). 
-- Find a collection of solutions to common use cases at [cookbook.vaadin.com](https://cookbook.vaadin.com/).
-- Find add-ons at [vaadin.com/directory](https://vaadin.com/directory).
-- Ask questions on [Stack Overflow](https://stackoverflow.com/questions/tagged/vaadin) or join our [Discord channel](https://discord.gg/MYFq5RTbBn).
-- Report issues, create pull requests in [GitHub](https://github.com/vaadin).
