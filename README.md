@@ -37,3 +37,7 @@ una vez completada la construcción.
 
 Una vez que el archivo JAR esté generado, puedes ejecutarlo utilizando
 `java -jar target/gifty-1.0-SNAPSHOT.jar`
+
+## Diagrama de clases
+
+![Diagrama de clases](img/diagramaCalses.png)
