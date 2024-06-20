@@ -40,4 +40,4 @@ Una vez que el archivo JAR esté generado, puedes ejecutarlo utilizando
 
 ## Diagrama de clases
 
-![Diagrama de clases](img/diagramaCalses.png)
+![Diagrama de clases](img/diagramaClases.PNG)
