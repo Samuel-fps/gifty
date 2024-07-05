@@ -8,6 +8,7 @@ import com.gifty.application.data.giftRegistry.GiftRegistry;
 import com.gifty.application.data.giftRegistry.GiftRegistryService;
 import com.gifty.application.data.person.Person;
 import com.gifty.application.data.person.PersonService;
+import com.gifty.application.data.user.UserService;
 import com.gifty.application.views.layout.MainLayout;
 import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.button.Button;
@@ -32,12 +33,14 @@ public class NewGiftView extends FlexLayout implements HasUrlParameter<String> {
     private final GiftService giftService;
     private final GiftRegistryService giftRegistryService;
     private final PersonService personService;
+    private final UserService userService;
     private GiftRegistry giftRegistry;
 
-    public NewGiftView(GiftService giftService, GiftRegistryService giftregistryService, PersonService personService) {
+    public NewGiftView(GiftService giftService, GiftRegistryService giftregistryService, PersonService personService, UserService userService) {
         this.giftService = giftService;
         this.giftRegistryService = giftregistryService;
         this.personService = personService;
+        this.userService = userService;
 
         // Div form style
         Div contentDiv = new Div();
@@ -53,7 +56,7 @@ public class NewGiftView extends FlexLayout implements HasUrlParameter<String> {
         priceField.setSuffixComponent((new Div("€")));
 
         ComboBox<Person> personComboBox = new ComboBox<>(MessageUtil.getMessage("text.formPerson"));
-        personComboBox.setItems(personService.getAllPersons());
+        personComboBox.setItems(userService.getAuthenticatedUser().getPersons());
         personComboBox.setItemLabelGenerator(Person::getName);
 
         Button saveButton = new Button(MessageUtil.getMessage("button.save"), e -> {
