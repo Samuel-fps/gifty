@@ -25,6 +25,7 @@ import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.router.*;
 import jakarta.annotation.security.PermitAll;
 
+import java.math.BigDecimal;
 import java.util.UUID;
 
 @Route(value = "edit-gift", layout = MainLayout.class)
@@ -72,11 +73,17 @@ public class GiftDetailsView extends VerticalLayout implements HasUrlParameter<S
 
             Button saveButton = new Button(MessageUtil.getMessage("button.save"), e -> {
                 if (gift != null) {
+                    BigDecimal oldPrice = gift.getPrice(),
+                               totalPrice = giftRegistry.getTotalPrice();
+
                     gift.setName(nameField.getValue());
                     gift.setUrl(urlField.getValue());
                     gift.setPrice(priceField.getValue());
                     gift.setPerson(personComboBox.getValue());
                     gift.setState(stateComboBox.getValue());
+
+                    totalPrice = totalPrice.add(gift.getPrice()).subtract(oldPrice);
+                    giftRegistry.setTotalPrice(totalPrice);
 
                     giftService.save(gift);
 
