@@ -1,5 +1,6 @@
 package com.gifty.application.registration;
 
+import com.gifty.application.config.MessageUtil;
 import com.vaadin.flow.component.HasValueAndElement;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
@@ -32,22 +33,23 @@ public class RegistrationForm extends FormLayout {
 
 
     public RegistrationForm() {
-        title = new H3("Sign up");
-        name = new TextField("Name");
-        email = new EmailField("Email");
+        title = new H3(MessageUtil.getMessage("title.registration"));
+        name = new TextField(MessageUtil.getMessage("text.formName"));
+        lastName = new TextField(MessageUtil.getMessage("text.formLastName"));
+        email = new EmailField(MessageUtil.getMessage("text.formEmail"));
 
-        password = new PasswordField("Password");
-        passwordConfirm = new PasswordField("Confirm password");
+        password = new PasswordField(MessageUtil.getMessage("login.formPassword"));
+        passwordConfirm = new PasswordField(MessageUtil.getMessage("text.formConfirmPassword"));
 
-        setRequiredIndicatorVisible(name, email, password,
+        setRequiredIndicatorVisible(name, lastName, email, password,
                 passwordConfirm);
 
         errorMessageField = new Span();
 
-        submitButton = new Button("Sign up");
+        submitButton = new Button(MessageUtil.getMessage("button.signIn"));
         submitButton.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
 
-        add(title, name, email, password,
+        add(title, name, lastName, email, password,
                 passwordConfirm, errorMessageField,
                 submitButton);
 
