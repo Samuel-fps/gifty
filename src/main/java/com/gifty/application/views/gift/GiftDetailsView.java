@@ -8,8 +8,10 @@ import com.gifty.application.data.giftRegistry.GiftRegistry;
 import com.gifty.application.data.giftRegistry.GiftRegistryService;
 import com.gifty.application.data.person.Person;
 import com.gifty.application.data.person.PersonService;
+import com.gifty.application.data.user.UserService;
 import com.gifty.application.views.gifRegistry.GiftRegistriesView;
 import com.gifty.application.views.layout.MainLayout;
+import com.gifty.application.views.login.LoginView;
 import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.combobox.ComboBox;
@@ -31,87 +33,94 @@ public class GiftDetailsView extends VerticalLayout implements HasUrlParameter<S
 
     private final GiftService giftService;
     private final GiftRegistryService giftRegistryService;
+    private final UserService userService;
     private Gift gift;
     private GiftRegistry giftRegistry;
 
     // Form components
-    private final TextField nameField;
-    private final TextField urlField;
-    private final BigDecimalField priceField;
-    private final ComboBox<Person> personComboBox;
-    private final ComboBox<State> stateComboBox;
+    private TextField nameField;
+    private TextField urlField;
+    private BigDecimalField priceField;
+    private ComboBox<Person> personComboBox;
+    private ComboBox<State> stateComboBox;
 
-    public GiftDetailsView(GiftService giftService, PersonService personService, GiftRegistryService giftRegistryService) {
+    public GiftDetailsView(GiftService giftService, PersonService personService, GiftRegistryService giftRegistryService, UserService userService) {
         this.giftService = giftService;
         this.giftRegistryService = giftRegistryService;
+        this.userService = userService;
 
-        // Styles form
-        Div contentDiv = new Div();
-        contentDiv.setWidth("400px");
-        contentDiv.getStyle().set("margin", "0 auto");
+        if(userService.getAuthenticatedUser() == giftRegistry.getUser()) {
+            // Styles form
+            Div contentDiv = new Div();
+            contentDiv.setWidth("400px");
+            contentDiv.getStyle().set("margin", "0 auto");
 
-        // edit form
-        FormLayout formLayout = new FormLayout();
+            // edit form
+            FormLayout formLayout = new FormLayout();
 
-        nameField = new TextField(MessageUtil.getMessage("text.formName"));
-        urlField = new TextField(MessageUtil.getMessage("text.formUrl"));
-        priceField = new BigDecimalField(MessageUtil.getMessage("text.price"));
-        priceField.setSuffixComponent((new Div("€")));
+            nameField = new TextField(MessageUtil.getMessage("text.formName"));
+            urlField = new TextField(MessageUtil.getMessage("text.formUrl"));
+            priceField = new BigDecimalField(MessageUtil.getMessage("text.price"));
+            priceField.setSuffixComponent((new Div("€")));
 
-        personComboBox = new ComboBox<>(MessageUtil.getMessage("text.formPerson"));
-        personComboBox.setItems(personService.getAllPersons());
-        personComboBox.setItemLabelGenerator(Person::getName);
+            personComboBox = new ComboBox<>(MessageUtil.getMessage("text.formPerson"));
+            personComboBox.setItems(personService.getAllPersons());
+            personComboBox.setItemLabelGenerator(Person::getName);
 
-        stateComboBox = new ComboBox<>(MessageUtil.getMessage("text.formState"));
-        stateComboBox.setItems(State.values());
+            stateComboBox = new ComboBox<>(MessageUtil.getMessage("text.formState"));
+            stateComboBox.setItems(State.values());
 
-        Button saveButton = new Button(MessageUtil.getMessage("button.save"), e -> {
-            if (gift != null) {
-                gift.setName(nameField.getValue());
-                gift.setUrl(urlField.getValue());
-                gift.setPrice(priceField.getValue());
-                gift.setPerson(personComboBox.getValue());
-                gift.setState(stateComboBox.getValue());
+            Button saveButton = new Button(MessageUtil.getMessage("button.save"), e -> {
+                if (gift != null) {
+                    gift.setName(nameField.getValue());
+                    gift.setUrl(urlField.getValue());
+                    gift.setPrice(priceField.getValue());
+                    gift.setPerson(personComboBox.getValue());
+                    gift.setState(stateComboBox.getValue());
 
-                giftService.save(gift);
+                    giftService.save(gift);
 
-                Notification.show(MessageUtil.getMessage("notification.updatedGift"), 3000, Notification.Position.TOP_CENTER)
-                        .addThemeVariants(NotificationVariant.LUMO_SUCCESS);
-                UI.getCurrent().navigate(GiftRegistryView.class, giftRegistry.getId().toString());
-            } else {
-                Notification.show(MessageUtil.getMessage("notification.errorSaveGift"), 3000, Notification.Position.TOP_CENTER)
+                    Notification.show(MessageUtil.getMessage("notification.updatedGift"), 3000, Notification.Position.TOP_CENTER)
+                            .addThemeVariants(NotificationVariant.LUMO_SUCCESS);
+                    UI.getCurrent().navigate(GiftRegistryView.class, giftRegistry.getId().toString());
+                } else {
+                    Notification.show(MessageUtil.getMessage("notification.errorSaveGift"), 3000, Notification.Position.TOP_CENTER)
                             .addThemeVariants(NotificationVariant.LUMO_ERROR);
-            }
-        });
-        saveButton.getStyle().set("background-color", "green");
-        saveButton.getStyle().set("color", "white");
+                }
+            });
+            saveButton.getStyle().set("background-color", "green");
+            saveButton.getStyle().set("color", "white");
 
-        Button deleteButton = new Button(MessageUtil.getMessage("button.delete"), e -> {
-            if (gift != null) {
-                giftService.delete(gift, giftRegistry);
-                Notification.show(MessageUtil.getMessage("notification.deletedGift"), 3000, Notification.Position.TOP_CENTER)
-                        .addThemeVariants(NotificationVariant.LUMO_ERROR);
-                UI.getCurrent().navigate(GiftRegistryView.class, giftRegistry.getId().toString());
-            } else {
-                Notification.show(MessageUtil.getMessage("notification.errorNotExitGift"), 3000, Notification.Position.TOP_CENTER)
-                        .addThemeVariants(NotificationVariant.LUMO_ERROR);
-            }
-        });
-        deleteButton.getStyle().set("background-color", "#B60000");
-        deleteButton.getStyle().set("color", "white");
+            Button deleteButton = new Button(MessageUtil.getMessage("button.delete"), e -> {
+                if (gift != null) {
+                    giftService.delete(gift, giftRegistry);
+                    Notification.show(MessageUtil.getMessage("notification.deletedGift"), 3000, Notification.Position.TOP_CENTER)
+                            .addThemeVariants(NotificationVariant.LUMO_ERROR);
+                    UI.getCurrent().navigate(GiftRegistryView.class, giftRegistry.getId().toString());
+                } else {
+                    Notification.show(MessageUtil.getMessage("notification.errorNotExitGift"), 3000, Notification.Position.TOP_CENTER)
+                            .addThemeVariants(NotificationVariant.LUMO_ERROR);
+                }
+            });
+            deleteButton.getStyle().set("background-color", "#B60000");
+            deleteButton.getStyle().set("color", "white");
 
 
-        Button cancelButton = new Button(MessageUtil.getMessage("button.cancel"), e -> cancelEdit());
+            Button cancelButton = new Button(MessageUtil.getMessage("button.cancel"), e -> cancelEdit());
 
-        formLayout.add(nameField, urlField, priceField, personComboBox, stateComboBox, saveButton, deleteButton, cancelButton);
+            formLayout.add(nameField, urlField, priceField, personComboBox, stateComboBox, saveButton, deleteButton, cancelButton);
 
-        // One column
-        formLayout.setResponsiveSteps(
-                new FormLayout.ResponsiveStep("0", 1)
-        );
+            // One column
+            formLayout.setResponsiveSteps(
+                    new FormLayout.ResponsiveStep("0", 1)
+            );
 
-        contentDiv.add(formLayout);
-        add(contentDiv);
+            contentDiv.add(formLayout);
+            add(contentDiv);
+        }
+        else {
+            UI.getCurrent().navigate(GiftRegistryView.class);
+        }
     }
 
     public void setGiftRegistry(UUID id){

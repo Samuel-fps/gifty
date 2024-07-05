@@ -3,6 +3,7 @@ package com.gifty.application.views.gift;
 import com.gifty.application.config.MessageUtil;
 import com.gifty.application.data.gift.Gift;
 import com.gifty.application.data.giftRegistry.GiftRegistryService;
+import com.gifty.application.data.user.UserService;
 import com.gifty.application.views.gifRegistry.GiftRegistriesView;
 import com.gifty.application.views.layout.MainLayout;
 import com.vaadin.flow.component.UI;
@@ -24,12 +25,14 @@ import java.util.UUID;
 public class GiftRegistryView extends VerticalLayout implements HasUrlParameter<String> {
 
     private final GiftRegistryService giftRegistryService;
+    private final UserService userService;
     private final Grid<Gift> grid;
     private UUID giftRegistryId;
 
     @Autowired
-    public GiftRegistryView(GiftRegistryService giftRegistryService){
+    public GiftRegistryView(GiftRegistryService giftRegistryService, UserService userService){
         this.giftRegistryService = giftRegistryService;
+        this.userService = userService;
         this.grid = new Grid<>(Gift.class);
 
         // New gift button
@@ -89,7 +92,12 @@ public class GiftRegistryView extends VerticalLayout implements HasUrlParameter<
 
     private void refreshGrid() {
         if (giftRegistryId != null) {
-            grid.setItems(giftRegistryService.getGiftRegistryById(giftRegistryId).getGifts());
+            if(giftRegistryService.getGiftRegistryById(giftRegistryId).getUser() == userService.getAuthenticatedUser()) {
+                grid.setItems(giftRegistryService.getGiftRegistryById(giftRegistryId).getGifts());
+            }
+            else{
+                UI.getCurrent().navigate(GiftRegistryView.class);
+            }
         } else {
             grid.setItems();
         }
