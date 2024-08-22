@@ -1,12 +1,10 @@
 # gifty
 
-
-
-Esta aplicación es un proyecto desarrollado para la asignatura de Ingeniería Web,
-en el cual se han utilizado las tecnologías Spring y Vaadin como frameworks de 
-backend y frontend, respectivamente. El proyecto consiste en una aplicación con 
-funcionalidad de registro de usuarios, y su principal objetivo es organizar la 
-compra de regalos para eventos específicos.
+Esta aplicación representa un proyecto creado para la asignatura de Ingeniería Web, 
+donde se emplearon los frameworks Spring y Vaadin para el desarrollo del backend y 
+frontend, respectivamente. Se trata de una plataforma diseñada para el registro de 
+usuarios, centrada en facilitar la organización de la compra de regalos para eventos
+específicos.
 
 English
 
